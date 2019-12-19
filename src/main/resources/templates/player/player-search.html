@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <title>Title</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <h2>Search for players:</h2>
+    <form action="#" th:action="@{/players/search}" th:object="${playerForm}" method="post">
+        <p>Part of name: <input type="text" th:field="*{name}" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</body>
+</html>
