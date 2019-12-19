@@ -15,7 +15,7 @@ import java.util.List;
 public interface PerGameStatsRepository extends JpaRepository<PerGameStats, PerGameStatsId> {
 
         PerGameStats findByIdPlayerAndIdTeamAndIdSeason(Player player, Team team, int season);
-        PerGameStats findByIdPlayerAndIdSeason(Player player, int season);
+        List<PerGameStats> findByIdPlayerAndIdSeason(Player player, int season);
         List<PerGameStats> findByIdPlayer(Player player);
 
         @Query(value = "SELECT MAX(pts) FROM per_game_stats", nativeQuery = true)
