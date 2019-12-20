@@ -8,7 +8,7 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
     <h2>Search for players:</h2>
-    <form action="#" th:action="@{/players/search}" th:object="${playerForm}" method="post">
+    <form action="#" th:action="@{/players/search_result}" th:object="${playerForm}" method="get">
         <p>Part of name: <input type="text" th:field="*{name}" /></p>
         <p><input type="submit" value="Submit" /></p>
     </form>

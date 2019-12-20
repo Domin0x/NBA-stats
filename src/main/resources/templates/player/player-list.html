@@ -8,26 +8,37 @@
 <body>
     <div th:replace="fragments/header :: header"></div>
 
-    <span th:if="${searchPhrase != null}" th:text="'Results of search for phrase: ' + ${searchPhrase}">static searchPhrase</span>
-
-    <!--<div th:if="${players.empty}"> search phrase = "</div>-->
+    <div th:if="${searchPhrase != null}" th:text="'Results of search for phrase: ' + ${searchPhrase}">static searchPhrase</div>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Name</th>
-            </tr>
+            <tr><th>Name</th></tr>
         </thead>
             <tbody>
-                <tr th:if="${players.empty}">
-                    <td colspan="2"> No Players Available </td>
-                </tr>
-                <tr th:each="player : ${players}">
-                    <td><a th:href="@{|/players/${player.id}|}"><span th:text="${player.name}"> firstName </span></a></td>
-                </tr>
+            <tr th:each="player, iStat : ${page.content}">
+                <td><a th:href="@{|/players/${player.id}|}"><span th:text="${player.name}"> Name </span></a></td>
+            </tr>
             </tbody>
-
     </table>
+
+    <!--<div th:if="${page.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">-->
+        <!--    <a th:href="@{/players(size=${page.size}, page=${pageNumber})}"-->
+               <!--th:text=${pageNumber}-->
+               <!--th:class="${pageNumber==page.number + 1} ? active"></a>-->
+    <!--</div>-->
+
+    <div class="row" th:fragment="pagination">
+        <div class="col-md-8">
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:each="pageNumber : ${pageNumbers}" >
+                        <a th:if="${searchPhrase == null}" class="page-link" th:href="@{/players(size=${page.size}, page=${pageNumber-1})}" th:text=${pageNumber}>1</a>
+                        <a th:if="${searchPhrase != null}" class="page-link" th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${page.size}, page=${pageNumber-1})}" th:text=${pageNumber}>1</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
 </body>
 </html>

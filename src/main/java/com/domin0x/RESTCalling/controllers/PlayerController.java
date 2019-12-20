@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,8 +20,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/players")
@@ -34,10 +39,18 @@ public class PlayerController {
     private RadarWebService radarService;
 
     @GetMapping({"/all", "/", ""})
-    public String listAllPlayers(Model model, @PageableDefault(value=30, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        List<Player> players = playerService.getPlayers(pageable);
-        model.addAttribute("pageInfo", pageable);
-        model.addAttribute("players", players);
+    public String listAllPlayers(Model model, @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Player> page = playerService.getPlayers(pageable);
+        model.addAttribute("page", page);
+
+        int totalPages = page.getTotalPages();
+        //pages numbering is 0-based
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
 
         return "player/player-list";
     }
@@ -57,11 +70,29 @@ public class PlayerController {
         return "player/player-search";
     }
 
-    @PostMapping("/search")
-    public String findPlayersSubmit(Model model, @ModelAttribute PlayerSearchForm form) {
-        List<Player> players = playerService.listPlayersByName(form.getName());
-        model.addAttribute("players", players);
-        model.addAttribute("searchPhrase`", form.getName());
+    @GetMapping("/search_result")
+    public String findPlayersSubmit(Model model, @ModelAttribute PlayerSearchForm form,  @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        String searchPhrase = form.getName();
+        Page<Player> page = playerService.listPlayersByName(searchPhrase, pageable);
+
+        int totalPages = page.getTotalPages();
+        //pages numbering is 0-based
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        try{
+            String searchPhraseEncoded = URLEncoder.encode(searchPhrase, "UTF-8");
+            model.addAttribute("searchPhraseEncoded", searchPhraseEncoded);
+        }catch (UnsupportedEncodingException e){
+            throw new AssertionError("UTF-8 not supported");//should never happen(?)
+        }
+
+        model.addAttribute("page", page);
+        model.addAttribute("searchPhrase", searchPhrase);
         return "player/player-list";
     }
 
@@ -88,7 +119,7 @@ public class PlayerController {
         return "player/player-radar";
     }
 
-    public static String convertBinImageToString(byte[] binImage) {
+    private static String convertBinImageToString(byte[] binImage) {
         if(binImage!=null && binImage.length>0) {
             return Base64.getEncoder().encodeToString(binImage);
         }
