@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class PlayerService {
@@ -27,7 +29,7 @@ public class PlayerService {
     }
 
     public List<Player> getPlayers() {
-        return (List<Player>) repository.findAll();
+        return repository.findAll();
     }
 
 //    public List<Player> getPlayers(Integer pageNo, Integer pageSize) {
@@ -41,18 +43,14 @@ public class PlayerService {
 //        }
 //    }
 
-    public List<Player> getPlayers(Pageable pageable) {
+    public Page<Player> getPlayers(Pageable pageable) {
         Pageable p = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
-        Page<Player> pagedResult = repository.findAll(p);
-        if (pagedResult.hasContent()) {
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<Player>();
-        }
+        return repository.findAll(p);
     }
 
-    public List<Player> listPlayersByName(String name) {
-        return repository.findByNameContainingIgnoreCase(name);
+    public Page<Player> listPlayersByName(String name, Pageable pageable) {
+        Pageable p = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
+        return repository.findByNameContainingIgnoreCase(name, p);
     }
 
     public Player getPlayerById(int id){
