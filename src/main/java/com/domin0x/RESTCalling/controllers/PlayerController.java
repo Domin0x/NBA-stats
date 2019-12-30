@@ -3,7 +3,6 @@ package com.domin0x.RESTCalling.controllers;
 import com.domin0x.RESTCalling.form.PlayerSearchForm;
 import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
-import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.RadarType;
 import com.domin0x.RESTCalling.service.PerGameStatsService;
 import com.domin0x.RESTCalling.service.PlayerService;
@@ -11,7 +10,6 @@ import com.domin0x.RESTCalling.service.RadarWebService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,15 +52,6 @@ public class PlayerController {
 
         return "player/player-list";
     }
-
-//    @GetMapping({"/all/{pageId}", "/{pageId}", "/{pageId}"})
-//    public String listAllPlayers(Model model,@PathVariable int pageId) {
-//        List<Player> players = playerService.getPlayers(pageId);
-//        model.addAttribute("players", players);
-//
-//        return "player/player-list";
-//    }
-
 
     @GetMapping({"/search"})
     public String findPlayersByName(Model model) {
