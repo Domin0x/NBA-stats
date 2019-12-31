@@ -38,10 +38,10 @@ public class PlayerController {
 
     @GetMapping({"/all", "/", ""})
     public String listAllPlayers(Model model, @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Player> page = playerService.getPlayers(pageable);
-        model.addAttribute("page", page);
+        Page<Player> playerPages = playerService.getPlayers(pageable);
+        model.addAttribute("playerPages", playerPages);
 
-        int totalPages = page.getTotalPages();
+        int totalPages = playerPages.getTotalPages();
         //pages numbering is 0-based
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -62,9 +62,9 @@ public class PlayerController {
     @GetMapping("/search_result")
     public String findPlayersSubmit(Model model, @ModelAttribute PlayerSearchForm form,  @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         String searchPhrase = form.getName();
-        Page<Player> page = playerService.listPlayersByName(searchPhrase, pageable);
+        Page<Player> playerPages = playerService.listPlayersByName(searchPhrase, pageable);
 
-        int totalPages = page.getTotalPages();
+        int totalPages = playerPages.getTotalPages();
         //pages numbering is 0-based
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -80,7 +80,7 @@ public class PlayerController {
             throw new AssertionError("UTF-8 not supported");//should never happen(?)
         }
 
-        model.addAttribute("page", page);
+        model.addAttribute("playerPages", playerPages);
         model.addAttribute("searchPhrase", searchPhrase);
         return "player/player-list";
     }
