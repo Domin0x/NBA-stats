@@ -46,7 +46,7 @@ public class RadarWebService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
 
-        byte [] img = new RestTemplate().postForObject(baseURL, entity, byte[].class );
+        byte [] img = restTemplate.postForObject(baseURL, entity, byte[].class );
         return img;
     }
 
@@ -75,7 +75,6 @@ public class RadarWebService {
 
     private RadarLayout fillLayoutData(RadarLayout layout, PerGameStats stats, Player player ){
         List<Category> categories = layout.getCategories();
-        layout.setTitle(player.getName() + " " + stats.getGamesPlayed() + " games played, " + stats.getMp() + " min/per game");
         switch(layout.getType()){
             case PLAYER_BASE_STATS:
                 categories.get(0).setValue(stats.getPts());
@@ -90,7 +89,6 @@ public class RadarWebService {
                 categories.get(9).setValue(stats.getFg3_pct());
                 categories.get(10).setValue(stats.getFt_pct());
                 categories.get(11).setValue(stats.getMp());
-                System.out.println(layout);
                 return layout;
             case SHOOTING_STATS:
                 categories.get(0).setValue(stats.getPts());
@@ -98,13 +96,11 @@ public class RadarWebService {
                 categories.get(2).setValue(stats.getFg3m());
                 categories.get(3).setValue(stats.getFg3a());
                 categories.get(4).setValue(stats.getFg_pct());
-                System.out.println("***stats.getFg_pct() = " + stats.getFg_pct());
                 categories.get(5).setValue(stats.getFgm());
                 categories.get(6).setValue(stats.getFga());
                 categories.get(7).setValue(stats.getFt_pct());
                 categories.get(8).setValue(stats.getFtm());
                 categories.get(9).setValue(stats.getFta());
-                System.out.println(layout.getCategories().get(4).toString());
 
                 return layout;
             default: throw new IllegalArgumentException(layout.getType().toString() + " doesn't have any template assigned.");

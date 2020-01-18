@@ -60,7 +60,10 @@ public class PlayerController {
     }
 
     @GetMapping("/search_result")
-    public String findPlayersSubmit(Model model, @ModelAttribute PlayerSearchForm form,  @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+    public String findPlayersSubmit(Model model,
+                                    @ModelAttribute PlayerSearchForm form,
+                                    @PageableDefault(value=20, sort = {"name"}, direction = Sort.Direction.ASC)
+                                        Pageable pageable) {
         String searchPhrase = form.getName();
         Page<Player> playerPages = playerService.listPlayersByName(searchPhrase, pageable);
 
@@ -88,22 +91,22 @@ public class PlayerController {
     @GetMapping("/{playerId}")
     public String showPlayer(Model model, @PathVariable int playerId) {
         Player player = playerService.getPlayerById(playerId);
-        List<PerGameStats> stats =  perGameStatsService.getPerGameStatsForPlayer(player);
-
         model.addAttribute("player", player);
-        model.addAttribute("stats", stats);
+        model.addAttribute("stats", perGameStatsService.getPerGameStatsForPlayer(player));
 
         return "player/player-page";
     }
 
     @RequestMapping(value = "/{playerId}/{season}/{type}", method = RequestMethod.GET)
-    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type)throws JsonProcessingException {
+    public String getRadarData(Model model,
+                               @PathVariable int playerId,
+                               @PathVariable int season,
+                               @PathVariable String type)throws JsonProcessingException {
         RadarType radarType = type.equals("scoring") ? RadarType.SHOOTING_STATS
-                                                             : RadarType.PLAYER_BASE_STATS;
+                                                     : RadarType.PLAYER_BASE_STATS;
 
         byte [] img = radarService.getRadarImage(radarType,playerService.getPlayerById(playerId), season);
-        String encodeBase64 = convertBinImageToString(img);
-        model.addAttribute("image", encodeBase64);
+        model.addAttribute("image", convertBinImageToString(img));
 
         return "player/player-radar";
     }

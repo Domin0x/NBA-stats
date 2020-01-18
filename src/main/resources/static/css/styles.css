@@ -18,6 +18,10 @@ li a {
   text-decoration: none;
 }
 
+li.page-item.active{
+    background-color: #d00000;
+}
+
 .disabled {
     pointer-events: none;
     opacity: 0.4;
