@@ -3,7 +3,7 @@ package com.domin0x.RESTCalling.radar;
 import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"name", "inner", "outer"})
 public class Category <T extends Number>{
 
