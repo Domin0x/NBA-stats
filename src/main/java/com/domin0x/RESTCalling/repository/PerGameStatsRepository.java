@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface PerGameStatsRepository extends JpaRepository<PerGameStats, PerGameStatsId> {
+public interface PerGameStatsRepository extends JpaRepository<PerGameStats, PerGameStatsId>, CustomizedPerGameStatsRepository {
 
         PerGameStats findByIdPlayerAndIdTeamAndIdSeason(Player player, Team team, int season);
         List<PerGameStats> findByIdPlayerAndIdSeason(Player player, int season);
@@ -20,5 +20,6 @@ public interface PerGameStatsRepository extends JpaRepository<PerGameStats, PerG
 
         @Query(value = "SELECT MAX(pts) FROM per_game_stats", nativeQuery = true)
         BigDecimal findMaxAmountOfPoints();
+
 
 }
