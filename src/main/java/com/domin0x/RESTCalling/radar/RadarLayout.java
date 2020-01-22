@@ -1,5 +1,6 @@
 package com.domin0x.RESTCalling.radar;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,9 +16,9 @@ public class RadarLayout {
     private RadarType type;
 
     @JsonProperty("categories")
-    private List<Category> categories;
+    private List<Category<BigDecimal>> categories;
 
-    public RadarLayout(String name, List<Category> categories, RadarType type) {
+    public RadarLayout(String name, List<Category<BigDecimal>> categories, RadarType type) {
         this.title = name;
         this.categories = categories;
         this.type = type;
@@ -35,12 +36,12 @@ public class RadarLayout {
     }
 
     @JsonProperty("categories")
-    public List<Category> getCategories() {
+    public List<Category<BigDecimal>> getCategories() {
         return categories;
     }
 
     @JsonProperty("categories")
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<Category<BigDecimal>> categories) {
         this.categories = categories;
     }
 

@@ -32,17 +32,6 @@ public class PlayerService {
         return repository.findAll();
     }
 
-//    public List<Player> getPlayers(Integer pageNo, Integer pageSize) {
-//        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("name"));
-//        Page<Player> pagedResult = repository.findAll(paging);
-//
-//        if (pagedResult.hasContent()) {
-//            return pagedResult.getContent();
-//        } else {
-//            return new ArrayList<Player>();
-//        }
-//    }
-
     public Page<Player> getPlayers(Pageable pageable) {
         Pageable p = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
         return repository.findAll(p);

@@ -48,5 +48,7 @@ public class PerGameStatsService {
     }
 
     public BigDecimal getMaxNoOfPts(){return repository.findMaxAmountOfPoints();}
+    public BigDecimal getQualifiedMaxOfField(String fieldName){return repository.findQualifiedMaxAmountOfField(fieldName);}
+    public BigDecimal getQualifiedMinOfField(String fieldName){return repository.findQualifiedMinAmountOfField(fieldName);}
 
 }

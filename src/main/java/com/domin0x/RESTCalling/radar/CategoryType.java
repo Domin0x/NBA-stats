@@ -1,0 +1,24 @@
+package com.domin0x.RESTCalling.radar;
+
+public enum CategoryType {
+    POINTS,
+    ASSISTS,
+    REBOUNDS,
+    OFF_REBOUNDS,
+    DEF_REBOUNDS,
+    STEALS,
+    TURNOVERS,
+    BLOCKS,
+    FOULS,
+    FREE_THROWS_MADE,
+    FREE_THROWS_ATTEMPTED,
+    FREE_THROWS_PCT,
+    FIELD_GOALS_MADE,
+    FIELD_GOALS_ATTEMPTED,
+    FIELD_GOALS_PCT,
+    THREES_MADE,
+    THREES_ATTEMPTED,
+    THREES_PCT,
+    MINUTES
+
+}
