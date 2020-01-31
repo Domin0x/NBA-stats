@@ -13,7 +13,7 @@ import java.util.*;
 public class RadarTemplateConfig {
     public static Map<RadarType, List<CategoryType>> RadarTypeMap;
 
-    public static List<CategoryType> baseStatsOrdered = Arrays.asList(
+    private static List<CategoryType> baseStatsOrdered = Arrays.asList(
             CategoryType.POINTS,
             CategoryType.OFF_REBOUNDS,
             CategoryType.DEF_REBOUNDS,
@@ -26,7 +26,7 @@ public class RadarTemplateConfig {
             CategoryType.FIELD_GOALS_PCT,
             CategoryType.THREES_PCT
     );
-    public static List<CategoryType> scoringStatsOrdered = Arrays.asList(
+    private static List<CategoryType> scoringStatsOrdered = Arrays.asList(
             CategoryType.POINTS,
             CategoryType.THREES_MADE,
             CategoryType.THREES_ATTEMPTED,
@@ -53,12 +53,12 @@ public class RadarTemplateConfig {
     @Bean
     @Qualifier("baseStatsTemplate")
     public RadarLayout baseStatsTemplate(){
-        List<Category<BigDecimal>> categories = new ArrayList<>();
+        List<Category<Number>> categories = new ArrayList<>();
         String name = "base stats template";
 
         for(CategoryType type : baseStatsOrdered){
-            RadarCategory category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
-            categories.add(new Category<>(category.getName(), category.minValue(perGameStatsService), category.maxValue(perGameStatsService)));
+            RadarCategoryService category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
+            categories.add(new Category<>(category.getName(), category.minValue(), category.maxValue()));
         }
         return new RadarLayout(name, categories, RadarType.PLAYER_BASE_STATS);
     }
@@ -68,13 +68,12 @@ public class RadarTemplateConfig {
     @Qualifier("scoringStatsTemplate")
     public RadarLayout scoringStatsTemplate(){
         String name = "scoring stats template";
-        List<Category<BigDecimal>> categories = new ArrayList<>();
+        List<Category<Number>> categories = new ArrayList<>();
 
         for(CategoryType type : scoringStatsOrdered){
-            RadarCategory category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
-            categories.add(new Category<>(category.getName(), category.minValue(perGameStatsService), category.maxValue(perGameStatsService)));
+            RadarCategoryService category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
+            categories.add(new Category<>(category.getName(), category.minValue(), category.maxValue()));
         }
-
         return new RadarLayout(name, categories, RadarType.SHOOTING_STATS);
     }
 }

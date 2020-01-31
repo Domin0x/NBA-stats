@@ -1,6 +1,6 @@
 package com.domin0x.RESTCalling.radar;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,12 +16,24 @@ public class RadarLayout {
     private RadarType type;
 
     @JsonProperty("categories")
-    private List<Category<BigDecimal>> categories;
+    private List<Category<Number>> categories;
 
-    public RadarLayout(String name, List<Category<BigDecimal>> categories, RadarType type) {
+    public RadarLayout(String name, List<Category<Number>> categories, RadarType type) {
         this.title = name;
         this.categories = categories;
         this.type = type;
+    }
+
+    public RadarLayout(RadarLayout template) {
+        this.title = template.title;
+        this.type = template.type;
+        //title is immutable and type stays the same so these 2 don't have to be deep copied
+        //"deep copy" categories list - copy only name, inner, outer. Actual value field will be set for each axis later
+        this.categories = new ArrayList<>();
+
+        for (Category<Number> cat : template.categories)
+            this.categories.add(new Category<>(cat.getName(), cat.getInner(), cat.getOuter()));
+
     }
 
     @JsonProperty("name")
@@ -36,12 +48,12 @@ public class RadarLayout {
     }
 
     @JsonProperty("categories")
-    public List<Category<BigDecimal>> getCategories() {
+    public List<Category<Number>> getCategories() {
         return categories;
     }
 
     @JsonProperty("categories")
-    public void setCategories(List<Category<BigDecimal>> categories) {
+    public void setCategories(List<Category<Number>> categories) {
         this.categories = categories;
     }
 

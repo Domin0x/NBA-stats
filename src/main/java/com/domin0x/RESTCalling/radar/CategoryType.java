@@ -1,6 +1,6 @@
 package com.domin0x.RESTCalling.radar;
 
-public enum CategoryType {
+public  enum CategoryType {
     POINTS,
     ASSISTS,
     REBOUNDS,
@@ -20,5 +20,4 @@ public enum CategoryType {
     THREES_ATTEMPTED,
     THREES_PCT,
     MINUTES
-
-}
+    }
