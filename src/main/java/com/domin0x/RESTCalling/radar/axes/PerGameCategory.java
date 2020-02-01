@@ -1,14 +1,13 @@
-package com.domin0x.RESTCalling.radar;
+package com.domin0x.RESTCalling.radar.axes;
 
 import com.domin0x.RESTCalling.BeanUtils.BeanUtil;
 import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.service.PerGameStatsService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-public class PerGameCategory implements RadarCategoryService {
+public class PerGameCategory implements CategoryService {
 
     private String name;
     private String pojoPropertyName;

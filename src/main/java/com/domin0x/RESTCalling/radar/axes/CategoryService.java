@@ -1,8 +1,8 @@
-package com.domin0x.RESTCalling.radar;
+package com.domin0x.RESTCalling.radar.axes;
 
 import java.math.BigDecimal;
 
-public interface RadarCategoryService {
+public interface CategoryService {
     BigDecimal minValue();
     BigDecimal maxValue();
     BigDecimal getValue();

@@ -1,12 +1,14 @@
 package com.domin0x.RESTCalling.radar;
 
+import com.domin0x.RESTCalling.radar.axes.Category;
+import com.domin0x.RESTCalling.radar.axes.CategoryType;
+import com.domin0x.RESTCalling.radar.axes.CategoryMappings;
+import com.domin0x.RESTCalling.radar.axes.CategoryService;
 import com.domin0x.RESTCalling.service.PerGameStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @Configuration
@@ -43,37 +45,25 @@ public class RadarTemplateConfig {
         Map<RadarType, List<CategoryType>> aMap = new HashMap<>();
         aMap.put(RadarType.PLAYER_BASE_STATS, baseStatsOrdered);
         aMap.put(RadarType.SHOOTING_STATS, scoringStatsOrdered);
-
         RadarTypeMap = Collections.unmodifiableMap(aMap);
     }
 
-    @Autowired
-    PerGameStatsService perGameStatsService;
-
     @Bean
-    @Qualifier("baseStatsTemplate")
-    public RadarLayout baseStatsTemplate(){
-        List<Category<Number>> categories = new ArrayList<>();
-        String name = "base stats template";
+    public Map<RadarType, RadarLayout> getRadarTemplatesMap(){
+        Map<RadarType, RadarLayout> radarTemplatesMap = new HashMap<>();
+        for (RadarType type  : RadarTypeMap.keySet())
+            radarTemplatesMap.put(type, new RadarLayout(type.name(), fillCategoriesData(type), type));
 
-        for(CategoryType type : baseStatsOrdered){
-            RadarCategoryService category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
-            categories.add(new Category<>(category.getName(), category.minValue(), category.maxValue()));
-        }
-        return new RadarLayout(name, categories, RadarType.PLAYER_BASE_STATS);
+        return radarTemplatesMap;
     }
 
-
-    @Bean
-    @Qualifier("scoringStatsTemplate")
-    public RadarLayout scoringStatsTemplate(){
-        String name = "scoring stats template";
+    private List<Category<Number>> fillCategoriesData(RadarType radarType) {
         List<Category<Number>> categories = new ArrayList<>();
 
-        for(CategoryType type : scoringStatsOrdered){
-            RadarCategoryService category= RadarCategoriesMappings.CATEGORY_STAT_MAP.get(type);
-            categories.add(new Category<>(category.getName(), category.minValue(), category.maxValue()));
+        for(CategoryType categoryType : RadarTypeMap.get(radarType)){
+            CategoryService categoryService = CategoryMappings.CATEGORY_STAT_MAP.get(categoryType);
+            categories.add(new Category<>(categoryService.getName(), categoryService.minValue(), categoryService.maxValue()));
         }
-        return new RadarLayout(name, categories, RadarType.SHOOTING_STATS);
+        return categories;
     }
 }

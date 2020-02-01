@@ -98,25 +98,15 @@ public class PlayerController {
     }
 
     @RequestMapping(value = "/{playerId}/{season}/{type}", method = RequestMethod.GET)
-    public String getRadarData(Model model,
-                               @PathVariable int playerId,
-                               @PathVariable int season,
-                               @PathVariable String type)throws JsonProcessingException {
-        RadarType radarType = type.equals("scoring") ? RadarType.SHOOTING_STATS
-                                                     : RadarType.PLAYER_BASE_STATS;
+    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type) throws JsonProcessingException {
 
-        byte [] img = radarService.getRadarImage(radarType,playerService.getPlayerById(playerId), season);
-        model.addAttribute("image", convertBinImageToString(img));
+        RadarType radarType = type.equals("scoring") ? RadarType.SHOOTING_STATS : RadarType.PLAYER_BASE_STATS;
+        String base64Image = radarService.getRadarImage(radarType,playerService.getPlayerById(playerId), season);
+        model.addAttribute("image", base64Image);
 
         return "player/player-radar";
     }
 
-    private static String convertBinImageToString(byte[] binImage) {
-        if(binImage!=null && binImage.length>0) {
-            return Base64.getEncoder().encodeToString(binImage);
-        }
-        else
-            return "";
-    }
+
 
 }

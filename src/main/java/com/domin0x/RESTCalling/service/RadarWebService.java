@@ -1,12 +1,16 @@
 package com.domin0x.RESTCalling.service;
 
+import com.domin0x.RESTCalling.imageUtils.ImageUtils;
 import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
 import com.domin0x.RESTCalling.radar.*;
+import com.domin0x.RESTCalling.radar.axes.Category;
+import com.domin0x.RESTCalling.radar.axes.CategoryType;
+import com.domin0x.RESTCalling.radar.axes.CategoryMappings;
+import com.domin0x.RESTCalling.radar.axes.CategoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RadarWebService {
@@ -26,12 +31,7 @@ public class RadarWebService {
     private RestTemplate restTemplate;
 
     @Autowired
-    @Qualifier("baseStatsTemplate")
-    private RadarLayout baseTemplateLayout;
-
-    @Autowired
-    @Qualifier("scoringStatsTemplate")
-    private RadarLayout scoringTemplateLayout;
+    private Map<RadarType, RadarLayout> radarTemplatesMap;
 
     @Autowired
     private PlayerService playerService;
@@ -39,47 +39,49 @@ public class RadarWebService {
     @Autowired
     private PerGameStatsService perGameStatsService;
 
-    public byte [] getRadarImage (String jsonData){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
-
-        return restTemplate.postForObject(baseURL, entity, byte[].class );
+    public String getRadarImage (RadarType radarType, Player player, int season ) throws JsonProcessingException{
+        RadarLayout layout = prepareRadarLayout(radarType, player, season);
+        byte [] radarBinImage = getRadarImageFromAPI(RadarToJsonString(layout));
+        return ImageUtils.convertBinImageToString(radarBinImage);
     }
 
-    public byte [] getRadarImage (RadarType radarType, Player player, int season ) throws JsonProcessingException{
+    public String RadarToJsonString(RadarLayout radarLayout) throws JsonProcessingException{
+        return new ObjectMapper().writeValueAsString(radarLayout);
+    }
+
+    private RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
         PerGameStats stats =  perGameStatsService.getPerGameStatsById(player, season);
         RadarLayout layout = createRadarLayoutFromTemplate(radarType);
-        layout = fillLayoutData(layout, stats);
-        String jsonRadarData = convertRadarDataToJsonString(layout);
-        return getRadarImage(jsonRadarData);
+        fillLayoutData(layout, stats);
+        return layout;
     }
 
-    public String convertRadarDataToJsonString(RadarLayout radarLayout) throws JsonProcessingException{
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(radarLayout);
+    private RadarLayout createRadarLayoutFromTemplate(RadarType templateKey){
+        return new RadarLayout(radarTemplatesMap.get(templateKey));
     }
 
-    private RadarLayout createRadarLayoutFromTemplate(RadarType radarType){
-        switch (radarType){
-            case PLAYER_BASE_STATS:
-                return new RadarLayout(baseTemplateLayout);
-            case SHOOTING_STATS:
-                return new RadarLayout(scoringTemplateLayout);
-
-            default: throw new IllegalArgumentException(radarType.toString() + " doesn't have any template assigned.");
-        }
-    }
-
-    private RadarLayout fillLayoutData(RadarLayout layout, PerGameStats stats){
+    private void fillLayoutData(RadarLayout layout, PerGameStats stats){
         List<Category<Number>> categories = layout.getCategories();
         int i = 0;
         for(CategoryType categoryType : RadarTemplateConfig.RadarTypeMap.get(layout.getType())){
-            RadarCategoryService radarCategoryService = RadarCategoriesMappings.CATEGORY_STAT_MAP.get(categoryType);
-            radarCategoryService.setDataSource(stats);
-            categories.get(i++).setValue(radarCategoryService.getValue());
+            CategoryService categoryService = CategoryMappings.CATEGORY_STAT_MAP.get(categoryType);
+            categoryService.setDataSource(stats);
+            categories.get(i).setValue(categoryService.getValue());
+            i++;
         }
-        return layout;
+    }
+
+    private HttpHeaders prepareHttpHeadersForJSONRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
+
+    private byte [] getRadarImageFromAPI (String jsonData){
+        HttpHeaders headers = prepareHttpHeadersForJSONRequest();
+        HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
+
+        return restTemplate.postForObject(baseURL, entity, byte[].class );
     }
 
 }

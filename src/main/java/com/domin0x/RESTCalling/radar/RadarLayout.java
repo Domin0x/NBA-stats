@@ -3,6 +3,7 @@ package com.domin0x.RESTCalling.radar;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.domin0x.RESTCalling.radar.axes.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,7 +34,6 @@ public class RadarLayout {
 
         for (Category<Number> cat : template.categories)
             this.categories.add(new Category<>(cat.getName(), cat.getInner(), cat.getOuter()));
-
     }
 
     @JsonProperty("name")

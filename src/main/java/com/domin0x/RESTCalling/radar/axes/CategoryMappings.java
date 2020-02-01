@@ -1,4 +1,4 @@
-package com.domin0x.RESTCalling.radar;
+package com.domin0x.RESTCalling.radar.axes;
 
 import com.domin0x.RESTCalling.model.PerGameStats;
 
@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RadarCategoriesMappings {
+public class CategoryMappings {
 
-    public static Map<CategoryType, RadarCategoryService> CATEGORY_STAT_MAP;
+    public static Map<CategoryType, CategoryService> CATEGORY_STAT_MAP;
 
     static {
         System.out.println("^^^^^^^^^^^^^^^^MAPPINGS^^^^^^^^^^^^^");
-        Map<CategoryType, RadarCategoryService> aMap = new HashMap<>();
+        Map<CategoryType, CategoryService> aMap = new HashMap<>();
         aMap.put(CategoryType.POINTS, new PerGameCategory("Points", "pts", PerGameStats::getPts ));
         aMap.put(CategoryType.ASSISTS, new PerGameCategory("Assists", "ast", PerGameStats::getAst ));
         aMap.put(CategoryType.DEF_REBOUNDS, new PerGameCategory("Drebs", "dreb", PerGameStats::getDreb ));

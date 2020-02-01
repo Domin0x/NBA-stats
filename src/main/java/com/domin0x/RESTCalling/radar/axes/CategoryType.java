@@ -1,6 +1,6 @@
-package com.domin0x.RESTCalling.radar;
+package com.domin0x.RESTCalling.radar.axes;
 
-public  enum CategoryType {
+public enum CategoryType {
     POINTS,
     ASSISTS,
     REBOUNDS,
