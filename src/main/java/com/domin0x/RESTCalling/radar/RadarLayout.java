@@ -3,7 +3,7 @@ package com.domin0x.RESTCalling.radar;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.domin0x.RESTCalling.radar.axes.Category;
+import com.domin0x.RESTCalling.radar.category.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;

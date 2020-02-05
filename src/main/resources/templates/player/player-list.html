@@ -6,88 +6,88 @@
     <title>Title</title>
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header"></div>
 
-    <div th:if="${searchPhrase != null}" th:text="'Results of search for phrase: ' + ${searchPhrase}">static searchPhrase</div>
+<div th:if="${searchPhrase != null}" th:text="'Results of search for phrase: ' + ${searchPhrase}">static searchPhrase</div>
 
-    <table class="table">
-        <thead>
-            <tr><th>Name</th></tr>
-        </thead>
-            <tbody>
-            <tr th:each="player, iStat : ${playerPages}">
-                <td><a th:href="@{|/players/${player.id}|}"><span th:text="${player.name}"> Name </span></a></td>
-            </tr>
-            </tbody>
-    </table>
+<table class="table">
+    <thead>
+    <tr><th>Name</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="player, iStat : ${playerPages}">
+        <td><a th:href="@{|/players/${player.id}|}" th:text="${player.name}"> <Name></Name></a></td>
+    </tr>
+    </tbody>
+</table>
 
-    <!-- page pagination -->
-    <nav aria-label="Pagination" th:if="${playerPages.totalPages gt 0 and searchPhrase == null}">
-        <ul class="pagination justify-content-center font-weight-bold"
-            th:with="leftMostPageNr=
+<!-- page pagination -->
+<nav aria-label="Pagination" th:if="${playerPages.totalPages gt 0 and searchPhrase == null}">
+    <ul class="pagination justify-content-center font-weight-bold"
+        th:with="leftMostPageNr=
             ${playerPages.number < 2 ? 1 :
                                       ((playerPages.number+3 < playerPages.totalPages) ? (playerPages.number - 1) :
                                                                                          (playerPages.totalPages - 4))}">
-            <li class="page-item" th:classappend="${playerPages.number eq 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/players(size=${playerPages.size}, page=${playerPages.number} - 1)}"
-                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item" th:classappend="${i eq playerPages.number + 1} ? 'active'"
-                th:each="i : ${#numbers.sequence( leftMostPageNr, playerPages.totalPages >= leftMostPageNr + 4 ? leftMostPageNr + 4 : playerPages.totalPages, 1)}">
-                <a class="page-link" th:href="@{/players(size=${playerPages.size}, page=${i-1})}" th:text="${i}"
-                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-            </li>
+        <li class="page-item" th:classappend="${playerPages.number eq 0} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/players(size=${playerPages.size}, page=${playerPages.number} - 1)}"
+               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${i eq playerPages.number + 1} ? 'active'"
+            th:each="i : ${#numbers.sequence( leftMostPageNr, playerPages.totalPages >= leftMostPageNr + 4 ? leftMostPageNr + 4 : playerPages.totalPages, 1)}">
+            <a class="page-link" th:href="@{/players(size=${playerPages.size}, page=${i-1})}" th:text="${i}"
+               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+        </li>
 
-            <li class="test" th:if="${playerPages.number + 10 lt playerPages.totalPages}">
-                <a class="page-link svg-icon" href="#">...</a>
-            </li>
+        <li class="test" th:if="${playerPages.number + 10 lt playerPages.totalPages}">
+            <a class="page-link svg-icon" href="#">...</a>
+        </li>
 
-            <li class="page-item" th:classappend="${playerPages.number + 1 eq playerPages.totalPages} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/players(size=${playerPages.size}, page=${playerPages.number} + 1)}"
-                   aria-label="Next" title="Next Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+        <li class="page-item" th:classappend="${playerPages.number + 1 eq playerPages.totalPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/players(size=${playerPages.size}, page=${playerPages.number} + 1)}"
+               aria-label="Next" title="Next Page" data-toggle="tooltip">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
-    <!-- page pagination for search results-->
-    <nav aria-label="Pagination" th:if="${playerPages.totalPages gt 0 and searchPhrase != null}">
-        <ul class="pagination justify-content-center font-weight-bold"
-            th:with="leftMostPageNr=
+<!-- page pagination for search results-->
+<nav aria-label="Pagination" th:if="${playerPages.totalPages gt 0 and searchPhrase != null}">
+    <ul class="pagination justify-content-center font-weight-bold"
+        th:with="leftMostPageNr=
             ${playerPages.number < 2 ? 1 :
                                       ((playerPages.number+3 < playerPages.totalPages) ? (playerPages.number - 1) :
                                                                                          (playerPages.totalPages - 4))}">
-            <li class="page-item" th:classappend="${playerPages.number eq 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${playerPages.number} - 1)}"
-                   aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item" th:classappend="${i eq playerPages.number + 1} ? 'active'"
-                th:each="i : ${#numbers.sequence( leftMostPageNr, playerPages.totalPages >= leftMostPageNr + 4 ? leftMostPageNr + 4 : playerPages.totalPages, 1)}">
-                <a class="page-link" th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${i-1})}" th:text="${i}"
-                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-            </li>
+        <li class="page-item" th:classappend="${playerPages.number eq 0} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${playerPages.number} - 1)}"
+               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${i eq playerPages.number + 1} ? 'active'"
+            th:each="i : ${#numbers.sequence( leftMostPageNr, playerPages.totalPages >= leftMostPageNr + 4 ? leftMostPageNr + 4 : playerPages.totalPages, 1)}">
+            <a class="page-link" th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${i-1})}" th:text="${i}"
+               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+        </li>
 
-            <li class="test" th:if="${playerPages.number + 10 lt playerPages.totalPages}">
-                <a class="page-link svg-icon" href="#">...</a>
-            </li>
+        <li class="test" th:if="${playerPages.number + 10 lt playerPages.totalPages}">
+            <a class="page-link svg-icon" href="#">...</a>
+        </li>
 
-            <li class="page-item" th:classappend="${playerPages.number + 1 eq playerPages.totalPages} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${playerPages.number} + 1)}"
-                   aria-label="Next" title="Next Page" data-toggle="tooltip">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+        <li class="page-item" th:classappend="${playerPages.number + 1 eq playerPages.totalPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/players/search_result(name=${searchPhraseEncoded}, size=${playerPages.size}, page=${playerPages.number} + 1)}"
+               aria-label="Next" title="Next Page" data-toggle="tooltip">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
 </body>
 </html>

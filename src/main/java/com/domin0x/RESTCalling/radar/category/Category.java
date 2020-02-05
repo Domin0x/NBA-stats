@@ -1,4 +1,4 @@
-package com.domin0x.RESTCalling.radar.axes;
+package com.domin0x.RESTCalling.radar.category;
 
 import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;

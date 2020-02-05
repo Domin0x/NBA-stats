@@ -1,7 +1,6 @@
 package com.domin0x.RESTCalling.controllers;
 
 import com.domin0x.RESTCalling.form.PlayerSearchForm;
-import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
 import com.domin0x.RESTCalling.radar.RadarType;
 import com.domin0x.RESTCalling.service.PerGameStatsService;
@@ -37,18 +36,12 @@ public class PlayerController {
     private RadarWebService radarService;
 
     @GetMapping({"/all", "/", ""})
-    public String listAllPlayers(Model model, @PageableDefault(value=20, page=0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+    public String listAllPlayers(Model model, @PageableDefault(value = 20, page = 0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Player> playerPages = playerService.getPlayers(pageable);
         model.addAttribute("playerPages", playerPages);
 
-        int totalPages = playerPages.getTotalPages();
-        //pages numbering is 0-based
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        List<Integer> pageNumbers = getPageNumbersList(playerPages);
+        model.addAttribute("pageNumbers", pageNumbers);
 
         return "player/player-list";
     }
@@ -66,15 +59,7 @@ public class PlayerController {
                                         Pageable pageable) {
         String searchPhrase = form.getName();
         Page<Player> playerPages = playerService.listPlayersByName(searchPhrase, pageable);
-
-        int totalPages = playerPages.getTotalPages();
-        //pages numbering is 0-based
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        model.addAttribute("pageNumbers", getPageNumbersList(playerPages));
 
         try{
             String searchPhraseEncoded = URLEncoder.encode(searchPhrase, "UTF-8");
@@ -93,20 +78,27 @@ public class PlayerController {
         Player player = playerService.getPlayerById(playerId);
         model.addAttribute("player", player);
         model.addAttribute("stats", perGameStatsService.getPerGameStatsForPlayer(player));
+        model.addAttribute("radarTypes", RadarType.values());
 
         return "player/player-page";
     }
 
     @RequestMapping(value = "/{playerId}/{season}/{type}", method = RequestMethod.GET)
     public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type) throws JsonProcessingException {
-
-        RadarType radarType = type.equals("scoring") ? RadarType.SHOOTING_STATS : RadarType.PLAYER_BASE_STATS;
+        RadarType radarType = RadarType.fromString(type);
         String base64Image = radarService.getRadarImage(radarType,playerService.getPlayerById(playerId), season);
         model.addAttribute("image", base64Image);
 
         return "player/player-radar";
     }
 
-
+    private List<Integer> getPageNumbersList(Page pages) {
+        int totalPages = pages.getTotalPages();
+        if (totalPages == 1)
+            return Collections.singletonList(1);
+        return IntStream.rangeClosed(1, totalPages)
+                .boxed()
+                .collect(Collectors.toList());
+    }
 
 }

@@ -2,7 +2,7 @@ package com.domin0x.RESTCalling.service;
 
 import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
-import com.domin0x.RESTCalling.model.Team;
+import com.domin0x.RESTCalling.radar.StatType;
 import com.domin0x.RESTCalling.repository.PerGameStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class PerGameStatsService {
     }
 
     public BigDecimal getMaxNoOfPts(){return repository.findMaxAmountOfPoints();}
-    public BigDecimal getQualifiedMaxOfField(String fieldName){return repository.findQualifiedMaxAmountOfField(fieldName);}
-    public BigDecimal getQualifiedMinOfField(String fieldName){return repository.findQualifiedMinAmountOfField(fieldName);}
+    public BigDecimal getQualifiedMaxOfField(StatType statType){return repository.findQualifiedMaxAmountOfField(statType);}
+    public BigDecimal getQualifiedMinOfField(StatType statType){return repository.findQualifiedMinAmountOfField(statType);}
 
 }

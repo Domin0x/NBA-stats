@@ -4,10 +4,8 @@ import com.domin0x.RESTCalling.imageUtils.ImageUtils;
 import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
 import com.domin0x.RESTCalling.radar.*;
-import com.domin0x.RESTCalling.radar.axes.Category;
-import com.domin0x.RESTCalling.radar.axes.CategoryType;
-import com.domin0x.RESTCalling.radar.axes.CategoryMappings;
-import com.domin0x.RESTCalling.radar.axes.CategoryService;
+import com.domin0x.RESTCalling.radar.category.Category;
+import com.domin0x.RESTCalling.radar.StatType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,7 @@ public class RadarWebService {
         return new ObjectMapper().writeValueAsString(radarLayout);
     }
 
-    private RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
+    public RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
         PerGameStats stats =  perGameStatsService.getPerGameStatsById(player, season);
         RadarLayout layout = createRadarLayoutFromTemplate(radarType);
         fillLayoutData(layout, stats);
@@ -63,10 +61,8 @@ public class RadarWebService {
     private void fillLayoutData(RadarLayout layout, PerGameStats stats){
         List<Category<Number>> categories = layout.getCategories();
         int i = 0;
-        for(CategoryType categoryType : RadarTemplateConfig.RadarTypeMap.get(layout.getType())){
-            CategoryService categoryService = CategoryMappings.CATEGORY_STAT_MAP.get(categoryType);
-            categoryService.setDataSource(stats);
-            categories.get(i).setValue(categoryService.getValue());
+        for(StatType statType : RadarTemplateConfig.radarTypeCategoriesMap.get(layout.getType())){
+            categories.get(i).setValue(statType.getStatValue(stats));
             i++;
         }
     }
@@ -77,7 +73,7 @@ public class RadarWebService {
         return headers;
     }
 
-    private byte [] getRadarImageFromAPI (String jsonData){
+    public byte [] getRadarImageFromAPI (String jsonData){
         HttpHeaders headers = prepareHttpHeadersForJSONRequest();
         HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
 
