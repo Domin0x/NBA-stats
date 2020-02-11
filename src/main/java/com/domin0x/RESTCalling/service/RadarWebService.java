@@ -1,23 +1,28 @@
 package com.domin0x.RESTCalling.service;
 
 import com.domin0x.RESTCalling.imageUtils.ImageUtils;
-import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
 import com.domin0x.RESTCalling.radar.*;
-import com.domin0x.RESTCalling.radar.category.Category;
-import com.domin0x.RESTCalling.radar.StatType;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InvalidObjectException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Service
 public class RadarWebService {
@@ -29,42 +34,12 @@ public class RadarWebService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private Map<RadarType, RadarLayout> radarTemplatesMap;
-
-    @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private PerGameStatsService perGameStatsService;
+    private RadarLayoutService radarLayoutService;
 
     public String getRadarImage (RadarType radarType, Player player, int season ) throws JsonProcessingException{
-        RadarLayout layout = prepareRadarLayout(radarType, player, season);
-        byte [] radarBinImage = getRadarImageFromAPI(RadarToJsonString(layout));
+        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, player, season);
+        byte [] radarBinImage = getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
         return ImageUtils.convertBinImageToString(radarBinImage);
-    }
-
-    public String RadarToJsonString(RadarLayout radarLayout) throws JsonProcessingException{
-        return new ObjectMapper().writeValueAsString(radarLayout);
-    }
-
-    public RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
-        PerGameStats stats =  perGameStatsService.getPerGameStatsById(player, season);
-        RadarLayout layout = createRadarLayoutFromTemplate(radarType);
-        fillLayoutData(layout, stats);
-        return layout;
-    }
-
-    private RadarLayout createRadarLayoutFromTemplate(RadarType templateKey){
-        return new RadarLayout(radarTemplatesMap.get(templateKey));
-    }
-
-    private void fillLayoutData(RadarLayout layout, PerGameStats stats){
-        List<Category<Number>> categories = layout.getCategories();
-        int i = 0;
-        for(StatType statType : RadarTemplateConfig.radarTypeCategoriesMap.get(layout.getType())){
-            categories.get(i).setValue(statType.getStatValue(stats));
-            i++;
-        }
     }
 
     private HttpHeaders prepareHttpHeadersForJSONRequest() {
@@ -73,10 +48,18 @@ public class RadarWebService {
         return headers;
     }
 
-    public byte [] getRadarImageFromAPI (String jsonData){
+    public byte [] getRadarImageFromAPI (String jsonData) {
         HttpHeaders headers = prepareHttpHeadersForJSONRequest();
         HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
 
+//        Resource resource = new ClassPathResource("images/sample-radar.png");
+//        try{
+//            InputStream input = resource.getInputStream();
+//            return StreamUtils.copyToByteArray(input);
+//        }catch (IOException e){
+//            e.printStackTrace();
+//            return null;
+//        }
         return restTemplate.postForObject(baseURL, entity, byte[].class );
     }
 

@@ -2,11 +2,11 @@ package com.domin0x.RESTCalling.controllers;
 
 import com.domin0x.RESTCalling.form.PlayerSearchForm;
 import com.domin0x.RESTCalling.model.Player;
+import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.RadarType;
-import com.domin0x.RESTCalling.service.PerGameStatsService;
-import com.domin0x.RESTCalling.service.PlayerService;
-import com.domin0x.RESTCalling.service.RadarWebService;
+import com.domin0x.RESTCalling.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -33,7 +33,14 @@ public class PlayerController {
     @Autowired
     private PerGameStatsService perGameStatsService;
     @Autowired
-    private RadarWebService radarService;
+    private RadarWebService radarWebService;
+    @Autowired
+    private RadarLayoutService radarLayoutService;
+    @Autowired
+    private AmazonService amazonService;
+    @Autowired
+    private RadarFileService radarFileService;
+
 
     @GetMapping({"/all", "/", ""})
     public String listAllPlayers(Model model, @PageableDefault(value = 20, page = 0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
@@ -84,10 +91,20 @@ public class PlayerController {
     }
 
     @RequestMapping(value = "/{playerId}/{season}/{type}", method = RequestMethod.GET)
-    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type) throws JsonProcessingException {
+    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type) {
         RadarType radarType = RadarType.fromString(type);
-        String base64Image = radarService.getRadarImage(radarType,playerService.getPlayerById(playerId), season);
-        model.addAttribute("image", base64Image);
+        Player player = playerService.getPlayerById(playerId);
+
+        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, player, season);
+        String key = radarFileService.calculateKey(layout);
+
+        if (radarFileService.checkIfKeyExists(key)){
+            model.addAttribute("imageLink", amazonService.getObjectURL(key));
+            return "player/player-radar";
+        }
+
+        model.addAttribute("imageLink", "/image/radar");
+        addParamsToModel(model, playerId, season, type);
 
         return "player/player-radar";
     }
@@ -99,6 +116,12 @@ public class PlayerController {
         return IntStream.rangeClosed(1, totalPages)
                 .boxed()
                 .collect(Collectors.toList());
+    }
+
+    private void addParamsToModel(Model model, int playerId, int season, String type){
+        model.addAttribute("playerId", playerId);
+        model.addAttribute("season", season);
+        model.addAttribute("type", type);
     }
 
 }
