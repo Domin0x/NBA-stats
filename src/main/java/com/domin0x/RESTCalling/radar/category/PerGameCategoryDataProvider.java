@@ -25,7 +25,7 @@ public class PerGameCategoryDataProvider implements CategoryDataProvider {
 
     @Override
     public String getName(StatType statType) {
-        return statType.name();
+        return statType.getDisplayName();
     }
 
 }

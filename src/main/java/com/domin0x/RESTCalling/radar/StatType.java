@@ -15,19 +15,36 @@ public enum StatType {
     TURNOVERS("tov", PerGameStats::getTurnovers),
     BLOCKS("blk", PerGameStats::getBlk),
     FOULS("pf", PerGameStats::getPf),
-    FREE_THROWS_MADE("ftm", PerGameStats::getFtm),
-    FREE_THROWS_ATTEMPTED("fta", PerGameStats::getFta),
-    FREE_THROWS_PCT("ft_pct", PerGameStats::getFt_pct),
-    FIELD_GOALS_MADE("fgm", PerGameStats::getFgm),
-    FIELD_GOALS_ATTEMPTED("fga", PerGameStats::getFga),
-    FIELD_GOALS_PCT("fg_pct", PerGameStats::getFg_pct),
-    THREES_MADE("fg3m", PerGameStats::getFg3m),
-    THREES_ATTEMPTED("fg3a", PerGameStats::getFg3a),
-    THREES_PCT("fg3_pct", PerGameStats::getFg3_pct),
+    FREE_THROWS_MADE("ftm", "FTM",PerGameStats::getFtm),
+    FREE_THROWS_ATTEMPTED("fta", "FTA",PerGameStats::getFta),
+    FREE_THROWS_PCT("ft_pct", "FT%",PerGameStats::getFt_pct),
+    FIELD_GOALS_MADE("fgm", "FGM",PerGameStats::getFgm),
+    FIELD_GOALS_ATTEMPTED("fga", "FGA",PerGameStats::getFga),
+    FIELD_GOALS_PCT("fg_pct", "FG%",PerGameStats::getFg_pct),
+    THREES_MADE("fg3m", "3PM", PerGameStats::getFg3m),
+    THREES_ATTEMPTED("fg3a", "3PA", PerGameStats::getFg3a),
+    THREES_PCT("fg3_pct", "3P%",PerGameStats::getFg3_pct),
     MINUTES("mp", PerGameStats::getMp);
 
     private String pojoPropertyName;
+    private String displayName;
     private Function<PerGameStats, BigDecimal> getStatValue;
+
+    StatType(String pojoPropertyName, Function<PerGameStats, BigDecimal> getStatValue) {
+        this.pojoPropertyName = pojoPropertyName;
+        this.getStatValue = getStatValue;
+        this.displayName = this.name();
+    }
+
+    StatType(String pojoPropertyName, String displayName, Function<PerGameStats, BigDecimal> getStatValue) {
+        this.pojoPropertyName = pojoPropertyName;
+        this.displayName = displayName;
+        this.getStatValue = getStatValue;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 
     public String getPojoPropertyName() {
         return pojoPropertyName;
@@ -35,11 +52,6 @@ public enum StatType {
 
     public BigDecimal getStatValue(PerGameStats stats) {
         return getStatValue.apply(stats);
-    }
-
-    StatType(String pojoPropertyName, Function<PerGameStats, BigDecimal> getStatValue) {
-        this.pojoPropertyName = pojoPropertyName;
-        this.getStatValue = getStatValue;
     }
 
     public static StatType fromString(String pojoPropertyName) {
