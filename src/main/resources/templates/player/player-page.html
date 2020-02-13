@@ -32,7 +32,8 @@
                 <td><span th:text="${statline.reb}"></span></td>
 
                 <th:block th:each="radarType : ${radarTypes}">
-                    <td><a th:href="@{|/players/${player.id}/${statline.id.season}/${radarType.getText()}|}"><span th:text="${radarType.getText()} + ' radar'"> </span></a></td>
+                    <td><a th:href="@{|/players/${player.id}/${statline.id.season}/${statline.id.team.id}/${radarType.getText()}|}">
+                        <span th:text="${radarType.getText()} + ' radar'"> </span></a></td>
                 </th:block>
 
             </tr>

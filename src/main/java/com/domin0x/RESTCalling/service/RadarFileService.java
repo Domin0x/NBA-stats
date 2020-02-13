@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,9 +21,8 @@ public class RadarFileService {
     @Autowired
     private RadarFileRepository radarFileRepository;
 
-
     public boolean checkIfKeyExists(String key){
-        return radarFileRepository.existsByPath(key);
+        return radarFileRepository.existsByPath(key) && amazonService.checkIfObjectExists(key);
     }
 
     public String calculateKey(RadarLayout radarLayout){
@@ -35,7 +33,22 @@ public class RadarFileService {
     public void cacheImage(RadarLayout radarLayout, byte [] content) {
             String key = calculateKey(radarLayout);
             amazonService.uploadFile(key, content);
-            radarFileRepository.save(new RadarFile(key));
+            if (!radarFileRepository.existsByPath(key))
+                radarFileRepository.save(new RadarFile(key));
+    }
+
+    public void deleteCachedImage(String key){
+        radarFileRepository.deleteByPath(key);
+        amazonService.deleteFile(key);
+    }
+
+    public void deleteAllCachedImages(){
+        amazonService.deleteAllInBucket();
+        radarFileRepository.deleteAll();
+    }
+
+    public void deleteAllObjectsInBucket(){
+        amazonService.deleteAllInBucket();
     }
 
     private String withoutWhitespaces(String str) {

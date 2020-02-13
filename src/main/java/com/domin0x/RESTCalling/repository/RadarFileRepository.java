@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface RadarFileRepository extends JpaRepository<RadarFile, Integer> {
 
     boolean existsByPath(String path);
+    void deleteByPath(String path);
 }

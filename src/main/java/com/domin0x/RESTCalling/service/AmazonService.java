@@ -1,9 +1,7 @@
 package com.domin0x.RESTCalling.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -68,5 +67,32 @@ public class AmazonService {
 
     public Object getObjectURL(String key) {
         return getObjectURL(defaultBucketName, key);
+    }
+
+    public boolean checkIfObjectExists(String key){
+        return amazonS3Client.doesObjectExist(defaultBucketName, key);
+    }
+
+    public void deleteFile(String key) {
+        amazonS3Client.deleteObject(defaultBucketName, key);
+    }
+
+    public void deleteAllInBucket(){
+        deleteAllInBucket(defaultBucketName);
+    }
+
+    public void deleteAllInBucket(String bucketName){
+        ObjectListing objectListing = amazonS3Client.listObjects(bucketName);
+        while (true) {
+            Iterator<S3ObjectSummary> objIter = objectListing.getObjectSummaries().iterator();
+            while (objIter.hasNext()) {
+                amazonS3Client.deleteObject(bucketName, objIter.next().getKey());
+            }
+            if (objectListing.isTruncated()) {
+                objectListing = amazonS3Client.listNextBatchOfObjects(objectListing);
+            } else {
+                break;
+            }
+        }
     }
 }

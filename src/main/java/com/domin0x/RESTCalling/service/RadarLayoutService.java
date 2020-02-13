@@ -39,6 +39,14 @@ public class RadarLayoutService {
         return layout;
     }
 
+    public RadarLayout prepareRadarLayout(RadarType radarType, PerGameStats stats){
+        RadarLayout layout = createRadarLayoutFromTemplate(radarType);
+        layout.setTitle(stats.getId().getPlayer().getName() + " " + stats.getId().getSeason() + " " + radarType.getText());
+        fillLayoutData(layout, stats);
+        return layout;
+    }
+
+
     private RadarLayout createRadarLayoutFromTemplate(RadarType templateKey){
         return new RadarLayout(radarTemplatesMap.get(templateKey));
     }

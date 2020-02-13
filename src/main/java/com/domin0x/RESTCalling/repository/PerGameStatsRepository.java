@@ -21,5 +21,13 @@ public interface PerGameStatsRepository extends JpaRepository<PerGameStats, PerG
         @Query(value = "SELECT MAX(pts) FROM per_game_stats", nativeQuery = true)
         BigDecimal findMaxAmountOfPoints();
 
+        @Query(value = "SELECT MIN(season) FROM per_game_stats", nativeQuery = true)
+        Integer findMinSeason();
+
+        @Query(value = "SELECT MAX(season) FROM per_game_stats", nativeQuery = true)
+        Integer findMaxSeason();
+
+        @Query(value = "SELECT DISTINCT season FROM per_game_stats", nativeQuery = true)
+        List<Integer> findAllSeasons();
 
 }

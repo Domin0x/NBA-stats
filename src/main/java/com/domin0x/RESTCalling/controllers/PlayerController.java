@@ -1,7 +1,9 @@
 package com.domin0x.RESTCalling.controllers;
 
 import com.domin0x.RESTCalling.form.PlayerSearchForm;
+import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
+import com.domin0x.RESTCalling.model.Team;
 import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.RadarType;
 import com.domin0x.RESTCalling.service.*;
@@ -30,6 +32,8 @@ public class PlayerController {
 
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private TeamService teamService;
     @Autowired
     private PerGameStatsService perGameStatsService;
     @Autowired
@@ -90,12 +94,14 @@ public class PlayerController {
         return "player/player-page";
     }
 
-    @RequestMapping(value = "/{playerId}/{season}/{type}", method = RequestMethod.GET)
-    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable String type) {
+    @RequestMapping(value = "/{playerId}/{season}/{teamId}/{type}", method = RequestMethod.GET)
+    public String getRadarData(Model model, @PathVariable int playerId, @PathVariable int season, @PathVariable int teamId, @PathVariable String type) {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
+        Team team = teamService.getTeamById(teamId);
+        PerGameStats stats = perGameStatsService.getPerGameStatsById(player, team, season);
 
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, player, season);
+        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
         String key = radarFileService.calculateKey(layout);
 
         if (radarFileService.checkIfKeyExists(key)){
@@ -104,12 +110,25 @@ public class PlayerController {
         }
 
         model.addAttribute("imageLink", "/image/radar");
-        addParamsToModel(model, playerId, season, type);
+        addParamsToModel(model, playerId, season, teamId, type);
 
         return "player/player-radar";
     }
 
-    private List<Integer> getPageNumbersList(Page pages) {
+    @RequestMapping(value = "/allSeasons", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Integer> getPlayerSeasons(Model model, @RequestParam int playerId) {
+        List<Integer> seasons;
+        Player player = playerService.getPlayerById(playerId);
+        return perGameStatsService.getPerGameStatsForPlayer(player).stream()
+                .map(stats -> stats.getId().getSeason())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+
+    }
+
+        private List<Integer> getPageNumbersList(Page pages) {
         int totalPages = pages.getTotalPages();
         if (totalPages == 1)
             return Collections.singletonList(1);
@@ -118,9 +137,10 @@ public class PlayerController {
                 .collect(Collectors.toList());
     }
 
-    private void addParamsToModel(Model model, int playerId, int season, String type){
+    private void addParamsToModel(Model model, int playerId, int season,int teamId, String type){
         model.addAttribute("playerId", playerId);
         model.addAttribute("season", season);
+        model.addAttribute("teamId", teamId);
         model.addAttribute("type", type);
     }
 

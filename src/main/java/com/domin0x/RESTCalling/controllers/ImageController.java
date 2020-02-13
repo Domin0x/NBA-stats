@@ -1,12 +1,11 @@
 package com.domin0x.RESTCalling.controllers;
 
+import com.domin0x.RESTCalling.model.PerGameStats;
 import com.domin0x.RESTCalling.model.Player;
+import com.domin0x.RESTCalling.model.Team;
 import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.RadarType;
-import com.domin0x.RESTCalling.service.PlayerService;
-import com.domin0x.RESTCalling.service.RadarFileService;
-import com.domin0x.RESTCalling.service.RadarLayoutService;
-import com.domin0x.RESTCalling.service.RadarWebService;
+import com.domin0x.RESTCalling.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +24,10 @@ public class ImageController {
     @Autowired
     private PlayerService playerService;
     @Autowired
+    private TeamService teamService;
+    @Autowired
+    private PerGameStatsService perGameStatsService;
+    @Autowired
     private RadarWebService radarWebService;
     @Autowired
     private RadarLayoutService radarLayoutService;
@@ -34,10 +37,13 @@ public class ImageController {
 
     @ResponseBody
     @RequestMapping(value = "/radar", produces = MediaType.IMAGE_PNG_VALUE )
-    public byte[] getRadarImage(@RequestParam int playerId, @RequestParam int season, @RequestParam String type) throws IOException {
+    public byte[] getRadarImage(@RequestParam int playerId, @RequestParam int season, @RequestParam int teamId, @RequestParam String type) throws IOException {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, player, season);
+        Team team = teamService.getTeamById(teamId);
+
+        PerGameStats stats = perGameStatsService.getPerGameStatsById(player,team, season);
+        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
         byte [] radarBinImage = radarWebService.getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
 
         radarFileService.cacheImage(layout, radarBinImage);
