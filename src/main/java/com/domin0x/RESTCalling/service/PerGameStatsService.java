@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PerGameStatsService {
@@ -53,6 +54,14 @@ public class PerGameStatsService {
 
     public List<PerGameStats> getPerGameStatsForPlayer(Player player){
         return repository.findByIdPlayer(player);
+    }
+
+    public List<Integer> getSeasonsForPlayer(Player player){
+        return repository.findByIdPlayer(player).stream()
+                .map(stats -> stats.getId().getSeason())
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public BigDecimal getMaxNoOfPts(){return repository.findMaxAmountOfPoints();}

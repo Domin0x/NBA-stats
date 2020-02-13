@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,43 +23,16 @@ public class AmazonService {
         return amazonS3Client.listBuckets();
     }
 
-    public void uploadFile(File uploadFile) {
-        amazonS3Client.putObject(defaultBucketName, uploadFile.getName(), uploadFile);
-    }
 
     public void uploadFile(String name, byte[] content)  {
-        File file = new File("/tmp/"+name);
-        file.canWrite();
-        file.canRead();
-        FileOutputStream iofs = null;
-        try {
-            iofs = new FileOutputStream(file);
-            iofs.write(content);
-            amazonS3Client.putObject(defaultBucketName, file.getName(), file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public byte[] getFile(String key) {
-        S3Object obj = amazonS3Client.getObject(defaultBucketName, key);
-        S3ObjectInputStream stream = obj.getObjectContent();
-        try {
-            byte[] content = IOUtils.toByteArray(stream);
-            obj.close();
-            return content;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        InputStream is = new ByteArrayInputStream(content);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType("image/png");
+        amazonS3Client.putObject(defaultBucketName, name, is, metadata);
     }
 
     public String getObjectURL(String bucketName, String key){
         return amazonS3Client.getUrl(bucketName, key).toString();
-
     }
 
     public Object getObjectURL(String key) {
