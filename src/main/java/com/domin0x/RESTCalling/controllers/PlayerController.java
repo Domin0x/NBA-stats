@@ -7,8 +7,6 @@ import com.domin0x.RESTCalling.model.Team;
 import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.RadarType;
 import com.domin0x.RESTCalling.service.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -104,44 +102,28 @@ public class PlayerController {
         RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
         String key = radarFileService.calculateKey(layout);
 
-        if (radarFileService.checkIfKeyExists(key)){
-            model.addAttribute("imageLink", amazonService.getObjectURL(key));
-            return "player/player-radar";
-        }
+        String imageLink = radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
+                                                                        "season", season,
+                                                                        "teamId", teamId,
+                                                                        "type", type));
 
-        model.addAttribute("imageLink", "/image/radar");
-        addParamsToModel(model, playerId, season, teamId, type);
-
+        model.addAttribute("imageLink", imageLink);
         return "player/player-radar";
     }
 
-    @RequestMapping(value = "/allSeasons", method = RequestMethod.GET)
+    @RequestMapping(value = "/{playerId}/allSeasons", method = RequestMethod.GET)
     @ResponseBody
-    public List<Integer> getPlayerSeasons(Model model, @RequestParam int playerId) {
-        List<Integer> seasons;
-        Player player = playerService.getPlayerById(playerId);
-        return perGameStatsService.getPerGameStatsForPlayer(player).stream()
-                .map(stats -> stats.getId().getSeason())
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
-
+    public List<Integer> getPlayerSeasons(Model model, @PathVariable int playerId) {
+        return perGameStatsService.getSeasonsForPlayer(playerService.getPlayerById(playerId));
     }
 
-        private List<Integer> getPageNumbersList(Page pages) {
+    private List<Integer> getPageNumbersList(Page pages) {
         int totalPages = pages.getTotalPages();
         if (totalPages == 1)
             return Collections.singletonList(1);
         return IntStream.rangeClosed(1, totalPages)
                 .boxed()
                 .collect(Collectors.toList());
-    }
-
-    private void addParamsToModel(Model model, int playerId, int season,int teamId, String type){
-        model.addAttribute("playerId", playerId);
-        model.addAttribute("season", season);
-        model.addAttribute("teamId", teamId);
-        model.addAttribute("type", type);
     }
 
 }

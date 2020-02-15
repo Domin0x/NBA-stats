@@ -1,21 +1,16 @@
 package com.domin0x.RESTCalling.controllers;
 
 
-import com.domin0x.RESTCalling.model.Player;
-import com.domin0x.RESTCalling.radar.RadarLayout;
-import com.domin0x.RESTCalling.radar.RadarType;
+import com.domin0x.RESTCalling.form.RadarForm;
 import com.domin0x.RESTCalling.service.PerGameStatsService;
 import com.domin0x.RESTCalling.service.PlayerService;
 import com.domin0x.RESTCalling.service.RadarLayoutService;
 import com.domin0x.RESTCalling.service.RadarWebService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 
 @Controller
 public class MainController {
@@ -30,16 +25,12 @@ public class MainController {
     private RadarWebService radarWebService;
     @GetMapping({"/index", "/", ""})
     public String showMainPage(Model model) {
+        model.addAttribute("radarForm", new RadarForm());
+        model.addAttribute("players", playerService.getPlayers());
+        model.addAttribute("seasons", perGameStatsService.findAllSeasons());
+
         return "index";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/png-value", produces = MediaType.IMAGE_PNG_VALUE )
-    public byte[] testphoto() throws JsonProcessingException {
-        Player player = playerService.getPlayerById(748);
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(RadarType.PLAYER_BASE_STATS, player, 2013);
-        byte [] radarBinImage = radarWebService.getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
-        return radarBinImage;
-    }
 
 }

@@ -4,10 +4,29 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script>
+
+    </script>
+
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
+    <form th:object="${radarForm}" onsubmit="myFunction()" id="radarForm">
 
-<a href="/players">Players</a>
+        <select th:field="${radarForm.playerId}" onchange="populateDropdownYears(this)" >
+            <option th:each="player : ${players}" th:value="${player.id}" th:text="${player.name}"></option>
+        </select>
+        <select th:field="${radarForm.year}" >
+        </select>
+        <select th:field="${radarForm.radarType}" >
+            <option th:each="radarType : ${T(com.domin0x.RESTCalling.radar.RadarType).values()}" th:value="${radarType}" th:text="${radarType.text}"></option>
+        </select>
+
+        <input type="submit" value="Submit" />
+    </form>
+        <img id="radar" src="//:0" />
 </body>
 </html>

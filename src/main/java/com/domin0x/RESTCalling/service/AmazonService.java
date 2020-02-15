@@ -35,7 +35,7 @@ public class AmazonService {
         return amazonS3Client.getUrl(bucketName, key).toString();
     }
 
-    public Object getObjectURL(String key) {
+    public String getObjectURL(String key) {
         return getObjectURL(defaultBucketName, key);
     }
 
