@@ -56,9 +56,8 @@ public enum StatType {
 
     public static StatType fromString(String pojoPropertyName) {
         for (StatType t : StatType.values()) {
-            if (t.pojoPropertyName.equalsIgnoreCase(pojoPropertyName)) {
+            if (t.pojoPropertyName.equalsIgnoreCase(pojoPropertyName))
                 return t;
-            }
         }
         throw new  IllegalArgumentException("No stat type mapped to '" + pojoPropertyName + "'!");
     }

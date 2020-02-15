@@ -2,15 +2,15 @@ package com.domin0x.RESTCalling.form;
 
 public class PlayerSearchForm {
 
-    String name;
+    String searchPhrase;
 
     public PlayerSearchForm() {}
 
-    public String getName() {
-        return name;
+    public String getSearchPhrase() {
+        return searchPhrase;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSearchPhrase(String searchPhrase) {
+        this.searchPhrase = searchPhrase;
     }
 }

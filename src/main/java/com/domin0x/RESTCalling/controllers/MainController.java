@@ -23,6 +23,7 @@ public class MainController {
     private RadarLayoutService radarLayoutService;
     @Autowired
     private RadarWebService radarWebService;
+
     @GetMapping({"/index", "/", ""})
     public String showMainPage(Model model) {
         model.addAttribute("radarForm", new RadarForm());

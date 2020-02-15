@@ -6,23 +6,12 @@ import com.domin0x.RESTCalling.radar.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InvalidObjectException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Service
 public class RadarWebService {
@@ -49,17 +38,7 @@ public class RadarWebService {
     }
 
     public byte [] getRadarImageFromAPI (String jsonData) {
-        HttpHeaders headers = prepareHttpHeadersForJSONRequest();
-        HttpEntity<String> entity = new HttpEntity<>(jsonData,headers);
-
-//        Resource resource = new ClassPathResource("images/sample-radar.png");
-//        try{
-//            InputStream input = resource.getInputStream();
-//            return StreamUtils.copyToByteArray(input);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//            return null;
-//        }
+        HttpEntity<String> entity = new HttpEntity<>(jsonData, prepareHttpHeadersForJSONRequest());
         return restTemplate.postForObject(baseURL, entity, byte[].class );
     }
 

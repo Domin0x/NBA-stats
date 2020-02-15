@@ -5,8 +5,8 @@ import com.domin0x.RESTCalling.radar.RadarType;
 public class RadarForm {
 
     Integer playerId;
-    RadarType radarType;
     Integer year;
+    RadarType radarType;
 
     public Integer getPlayerId() {
         return playerId;
@@ -16,19 +16,19 @@ public class RadarForm {
         this.playerId = playerId;
     }
 
-    public RadarType getRadarType() {
-        return radarType;
-    }
-
-    public void setRadarType(RadarType radarType) {
-        this.radarType = radarType;
-    }
-
     public Integer getYear() {
         return year;
     }
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public RadarType getRadarType() {
+        return radarType;
+    }
+
+    public void setRadarType(RadarType radarType) {
+        this.radarType = radarType;
     }
 }

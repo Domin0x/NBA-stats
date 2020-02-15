@@ -54,7 +54,10 @@ public class ImageController {
 
     @ResponseBody
     @RequestMapping(value = "/radar", produces = MediaType.IMAGE_PNG_VALUE )
-    public byte[] getRadarImage(@RequestParam int playerId, @RequestParam int season, @RequestParam(required = false) Integer teamId, @RequestParam String type) throws IOException {
+    public byte[] getRadarImage(@RequestParam int playerId,
+                                @RequestParam int season,
+                                @RequestParam(required = false) Integer teamId,
+                                @RequestParam String type) throws IOException {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
         PerGameStats stats;

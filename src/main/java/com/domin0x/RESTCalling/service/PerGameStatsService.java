@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class PerGameStatsService {
-/*   player statlines are associated with PerGameStatsId consisting of 3 columns: player_id, season, team_id
-     in case a player played for more than 1 team during single season(e.g he was traded mid-season)
-     the team_id column will be filled with the id of a special team instance identified by abbreviation "TOT"
-     this follows the default design of BasketballReference.com, which is the source of data used in this project*/
+/*   Player statlines are associated with PerGameStatsId consisting of 3 columns: player_id, season, team_id.
+     Usually there exists one record for a player per season. However, in case a player played for more than 1 team
+     during a single season(e.g he was traded mid-season), then there will be multiple records: one per each team he
+     played and an extra record representing all games combined. The team_id column for this record
+     will be filled with the id of a special team instance identified by abbreviation "TOT".
+     This follows the default design of BasketballReference.com, which is the source of data used in this project*/
     private final static String MULTIPLE_TEAMS_ABBREVIATION = "TOT";
 
     @Autowired
@@ -52,9 +54,7 @@ public class PerGameStatsService {
 
     }
 
-    public List<PerGameStats> getPerGameStatsForPlayer(Player player){
-        return repository.findByIdPlayer(player);
-    }
+    public List<PerGameStats> getPerGameStatsForPlayer(Player player){return repository.findByIdPlayer(player);}
 
     public List<Integer> getSeasonsForPlayer(Player player){
         return repository.findByIdPlayer(player).stream()

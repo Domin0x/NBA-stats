@@ -4,6 +4,8 @@ import com.domin0x.RESTCalling.model.RadarFile;
 import com.domin0x.RESTCalling.radar.RadarLayout;
 import com.domin0x.RESTCalling.radar.category.Category;
 import com.domin0x.RESTCalling.repository.RadarFileRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -19,7 +21,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class RadarFileService {
-    private final static String SUFFIX = ".png";
+    private static final String SUFFIX = ".png";
+    private static final Logger logger = LoggerFactory.getLogger(RadarFileService.class);
 
     @Autowired
     private AmazonService amazonService;
@@ -36,6 +39,23 @@ public class RadarFileService {
 
     public String calculateKey(RadarLayout radarLayout){
         return withoutWhitespaces(radarLayout.getTitle()) + categoriesToKeyString(radarLayout.getCategories()) + SUFFIX;
+    }
+
+    private String withoutWhitespaces(String str) {
+        return str.replaceAll("\\s", "");
+    }
+
+    private String categoriesToKeyString(List<Category<Number>> categories) {
+        return categories.stream()
+                .map(this::mapRadarValueToString)
+                .collect(Collectors.joining(""));
+    }
+
+    private String mapRadarValueToString(Category<Number> category){
+        Number n = category.getValue();
+        if (n == null)
+            return "XXX";
+        return n.toString().replace(".", "111");
     }
 
     @Async("processExecutor")
@@ -62,8 +82,8 @@ public class RadarFileService {
         try{
             return URLEncoder.encode(string, StandardCharsets.UTF_8.toString());
         }catch (UnsupportedEncodingException e){
-            //TODO LOG THIS EXCEPTION
-            return string;
+            logger.warn("Encoding unsuccessful for String \"" + string + "\"", e);
+        return string;
         }
     }
 
@@ -83,22 +103,5 @@ public class RadarFileService {
 
     public void deleteAllObjectsInBucket(){
         amazonService.deleteAllInBucket();
-    }
-
-    private String withoutWhitespaces(String str) {
-        return str.replaceAll("\\s", "");
-    }
-
-    private String categoriesToKeyString(List<Category<Number>> categories) {
-        return categories.stream()
-                .map(this::mapRadarValueToString)
-                .collect(Collectors.joining(""));
-    }
-
-    private String mapRadarValueToString(Category<Number> category){
-        Number n = category.getValue();
-        if (n == null)
-            return "XXX";
-        return n.toString().replace(".", "111");
     }
 }

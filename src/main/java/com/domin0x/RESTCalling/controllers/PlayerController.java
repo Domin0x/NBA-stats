@@ -17,8 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +45,8 @@ public class PlayerController {
 
 
     @GetMapping({"/all", "/", ""})
-    public String listAllPlayers(Model model, @PageableDefault(value = 20, page = 0, sort = {"name", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+    public String listAllPlayers(Model model, @PageableDefault(value = 20, page = 0, sort = {"name", "id"},
+                                                               direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Player> playerPages = playerService.getPlayers(pageable);
         model.addAttribute("playerPages", playerPages);
 
@@ -64,18 +65,15 @@ public class PlayerController {
     @GetMapping("/search_result")
     public String findPlayersSubmit(Model model,
                                     @ModelAttribute PlayerSearchForm form,
-                                    @PageableDefault(value=20, sort = {"name"}, direction = Sort.Direction.ASC)
-                                        Pageable pageable) {
-        String searchPhrase = form.getName();
+                                    @PageableDefault(value=20, sort = {"name"},
+                                                     direction = Sort.Direction.ASC)
+                                                     Pageable pageable) {
+        String searchPhrase = form.getSearchPhrase();
         Page<Player> playerPages = playerService.listPlayersByName(searchPhrase, pageable);
         model.addAttribute("pageNumbers", getPageNumbersList(playerPages));
 
-        try{
-            String searchPhraseEncoded = URLEncoder.encode(searchPhrase, "UTF-8");
-            model.addAttribute("searchPhraseEncoded", searchPhraseEncoded);
-        }catch (UnsupportedEncodingException e){
-            throw new AssertionError("UTF-8 not supported");//should never happen(?)
-        }
+        String searchPhraseEncoded = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8);
+        model.addAttribute("searchPhraseEncoded", searchPhraseEncoded);
 
         model.addAttribute("playerPages", playerPages);
         model.addAttribute("searchPhrase", searchPhrase);

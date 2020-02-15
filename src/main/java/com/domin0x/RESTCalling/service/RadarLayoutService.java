@@ -27,25 +27,22 @@ public class RadarLayoutService {
     @Autowired
     private PerGameStatsService perGameStatsService;
 
-    public String radarToJsonString(RadarLayout radarLayout) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(radarLayout);
-    }
 
     public RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
         PerGameStats stats =  perGameStatsService.getPerGameStatsById(player, season);
-        RadarLayout layout = createRadarLayoutFromTemplate(radarType);
-        layout.setTitle(player.getName() + " " + season + " " + radarType.getText());
-        fillLayoutData(layout, stats);
-        return layout;
+        return prepareRadarLayout(radarType, stats);
     }
 
     public RadarLayout prepareRadarLayout(RadarType radarType, PerGameStats stats){
         RadarLayout layout = createRadarLayoutFromTemplate(radarType);
-        layout.setTitle(stats.getId().getPlayer().getName() + " " + stats.getId().getSeason() + " " + radarType.getText());
+        layout.setTitle(generateTitle(radarType, stats));
         fillLayoutData(layout, stats);
         return layout;
     }
 
+    private String generateTitle(RadarType radarType, PerGameStats stats){
+        return stats.getId().getPlayer().getName() + " " + stats.getId().getSeason() + " " + radarType.getText();
+    }
 
     private RadarLayout createRadarLayoutFromTemplate(RadarType templateKey){
         return new RadarLayout(radarTemplatesMap.get(templateKey));
@@ -60,4 +57,7 @@ public class RadarLayoutService {
         }
     }
 
+    public String radarToJsonString(RadarLayout radarLayout) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(radarLayout);
+    }
 }
