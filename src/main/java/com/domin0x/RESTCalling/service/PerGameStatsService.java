@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,20 +48,19 @@ public class PerGameStatsService {
         //if a player played for multiple teams in a single season find aggregated stats
         return statsList.stream()
                 .filter(x -> x.getId().getTeam().getAbbreviation().equals(MULTIPLE_TEAMS_ABBREVIATION))
-                .reduce((a, b) -> {
-                    throw new IllegalStateException("Multiple elements: " + a + ", " + b);
-                })
-                .orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No statline matching multiple-team abbreviation "
+                                                             + MULTIPLE_TEAMS_ABBREVIATION));
 
     }
 
     public List<PerGameStats> getPerGameStatsForPlayer(Player player){return repository.findByIdPlayer(player);}
 
-    public List<Integer> getSeasonsForPlayer(Player player){
+    public List<Integer> getOrderedSeasonsForPlayer(Player player){
         return repository.findByIdPlayer(player).stream()
                 .map(stats -> stats.getId().getSeason())
                 .distinct()
-                .sorted()
+                .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
     }
 

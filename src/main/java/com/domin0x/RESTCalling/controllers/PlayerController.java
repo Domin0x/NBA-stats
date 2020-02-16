@@ -112,7 +112,7 @@ public class PlayerController {
     @RequestMapping(value = "/{playerId}/allSeasons", method = RequestMethod.GET)
     @ResponseBody
     public List<Integer> getPlayerSeasons(Model model, @PathVariable int playerId) {
-        return perGameStatsService.getSeasonsForPlayer(playerService.getPlayerById(playerId));
+        return perGameStatsService.getOrderedSeasonsForPlayer(playerService.getPlayerById(playerId));
     }
 
     private List<Integer> getPageNumbersList(Page pages) {
