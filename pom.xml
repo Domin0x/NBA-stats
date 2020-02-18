@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.domin0x</groupId>
-	<artifactId>RESTCalling</artifactId>
+	<artifactId>NBARadars</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RESTCalling</name>
+	<name>NBARadars</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

@@ -23,7 +23,7 @@
             <option th:each="season : ${seasons}" th:value="${season}" th:text="${season}"></option>
         </select>
         <select th:field="${radarForm.radarType}" >
-            <option th:each="radarType : ${T(com.domin0x.RESTCalling.radar.RadarType).values()}" th:value="${radarType}" th:text="${radarType.text}"></option>
+            <option th:each="radarType : ${T(com.domin0x.NBARadars.radar.RadarType).values()}" th:value="${radarType}" th:text="${radarType.text}"></option>
         </select>
 
         <input type="submit" value="Submit" />
