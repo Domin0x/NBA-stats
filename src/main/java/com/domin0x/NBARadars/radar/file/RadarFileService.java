@@ -29,8 +29,8 @@ public class RadarFileService {
     @Autowired
     private RadarFileRepository radarFileRepository;
 
-    @Value("${radarImage.overwriteAmazon}")
-    boolean forceOverwriteAmazonCache;
+    @Value("${radarImage.useAmazonS3}")
+    boolean useAmazonCache;
 
     public boolean checkIfKeyExists(String key){
         return radarFileRepository.existsByPath(key) && amazonService.checkIfObjectExists(key);
@@ -66,7 +66,7 @@ public class RadarFileService {
     }
 
     public String getImageSrcLink(String key, Map<String, Object> map){
-        if (!forceOverwriteAmazonCache && checkIfKeyExists(key))
+        if (useAmazonCache && checkIfKeyExists(key))
             return amazonService.getObjectURL(key);
 
         String baseURL = "/image/radar?";
