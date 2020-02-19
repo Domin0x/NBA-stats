@@ -2,9 +2,7 @@ package com.domin0x.NBARadars.player;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +19,11 @@ public class PlayerService {
     }
 
     public Page<Player> getPlayers(Pageable pageable) {
-        Pageable p = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
-        return repository.findAll(p);
+        return repository.findAll(pageable);
     }
 
     public Page<Player> listPlayersByName(String name, Pageable pageable) {
-        Pageable p = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
-        return repository.findByNameContainingIgnoreCase(name, p);
+        return repository.findByNameContainingIgnoreCase(name, pageable);
     }
 
     public Player getPlayerById(int id){
