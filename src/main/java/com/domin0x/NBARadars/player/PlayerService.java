@@ -16,14 +16,6 @@ public class PlayerService {
     @Autowired
     PlayerRepository repository;
 
-    public void add(Player player) {
-        repository.save(player);
-    }
-
-    public void delete(int id) {
-        repository.deleteById(id);
-    }
-
     public List<Player> getPlayers() {
         return repository.findAll();
     }

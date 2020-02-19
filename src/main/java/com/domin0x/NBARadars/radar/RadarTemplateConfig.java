@@ -47,7 +47,7 @@ public class RadarTemplateConfig {
     @Bean
     public Map<RadarType, RadarLayout> radarTemplatesMap(){
         Map<RadarType, RadarLayout> radarTemplatesMap = new HashMap<>();
-        for (RadarType type  : RadarType.values())
+        for (RadarType type : RadarType.values())
             radarTemplatesMap.put(type, new RadarLayout(type.name(), getCategories(type), type));
 
         return radarTemplatesMap;

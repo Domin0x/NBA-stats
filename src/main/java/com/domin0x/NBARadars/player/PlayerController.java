@@ -1,12 +1,11 @@
 package com.domin0x.NBARadars.player;
 
-import com.domin0x.NBARadars.NBARadarsApplication;
-import com.domin0x.NBARadars.amazon.AmazonService;
 import com.domin0x.NBARadars.radar.file.RadarFileService;
 import com.domin0x.NBARadars.stats.PerGameStats;
 import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.radar.*;
 import com.domin0x.NBARadars.team.Team;
+import com.domin0x.NBARadars.team.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -31,15 +30,11 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
     @Autowired
-    private NBARadarsApplication.TeamService teamService;
+    private TeamService teamService;
     @Autowired
     private PerGameStatsService perGameStatsService;
     @Autowired
-    private RadarWebService radarWebService;
-    @Autowired
     private RadarLayoutService radarLayoutService;
-    @Autowired
-    private AmazonService amazonService;
     @Autowired
     private RadarFileService radarFileService;
 

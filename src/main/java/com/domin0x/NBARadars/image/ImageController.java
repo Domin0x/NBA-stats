@@ -1,6 +1,6 @@
 package com.domin0x.NBARadars.image;
 
-import com.domin0x.NBARadars.NBARadarsApplication;
+import com.domin0x.NBARadars.team.TeamService;
 import com.domin0x.NBARadars.radar.RadarForm;
 import com.domin0x.NBARadars.radar.file.RadarFileService;
 import com.domin0x.NBARadars.stats.PerGameStats;
@@ -24,7 +24,7 @@ public class ImageController {
     @Autowired
     private PlayerService playerService;
     @Autowired
-    private NBARadarsApplication.TeamService teamService;
+    private TeamService teamService;
     @Autowired
     private PerGameStatsService perGameStatsService;
     @Autowired

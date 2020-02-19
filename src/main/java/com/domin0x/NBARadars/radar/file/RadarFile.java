@@ -15,6 +15,8 @@ public class RadarFile {
     @Column(name="path", unique = true)
     private String path;
 
+    public RadarFile(){}
+
     public RadarFile(String path) {
         this.path = path;
     }
