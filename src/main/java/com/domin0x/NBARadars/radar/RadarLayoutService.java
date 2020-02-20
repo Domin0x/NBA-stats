@@ -20,7 +20,7 @@ public class RadarLayoutService {
     private Map<RadarType, RadarLayout> radarTemplatesMap;
 
     @Autowired
-    private PlayerService playerService;
+    private Map<RadarType, List<StatType>> radarStatTypeMap;
 
     @Autowired
     private PerGameStatsService perGameStatsService;
@@ -49,7 +49,7 @@ public class RadarLayoutService {
     private void fillLayoutData(RadarLayout layout, PerGameStats stats){
         List<Category<Number>> categories = layout.getCategories();
         int i = 0;
-        for(StatType statType : RadarTemplateConfig.radarTypeCategoriesMap.get(layout.getType())){
+        for(StatType statType : radarStatTypeMap.get(layout.getType())){
             categories.get(i).setValue(statType.getStatValue(stats));
             i++;
         }

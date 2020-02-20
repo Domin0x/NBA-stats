@@ -3,6 +3,8 @@ package com.domin0x.NBARadars.radar.category;
 import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Objects;
+
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"name", "inner", "outer"})
 public class Category <T extends Number>{
@@ -17,17 +19,17 @@ public class Category <T extends Number>{
     private T value;
 
     public Category(String name, T inner, T outer) {
-        this.name = name;
-        this.inner = inner;
-        this.outer = outer;
-        this.value = inner;
+        this.name = Objects.requireNonNull(name);
+        this.inner = Objects.requireNonNull(inner);
+        this.outer = Objects.requireNonNull(outer);
+        this.value = Objects.requireNonNull(inner);
     }
 
     public Category(String name, T inner, T outer, T value) {
-        this.name = name;
-        this.inner = inner;
-        this.outer = outer;
-        this.value = value;
+        this.name = Objects.requireNonNull(name);
+        this.inner = Objects.requireNonNull(inner);
+        this.outer = Objects.requireNonNull(outer);
+        this.value = value != null ? value : inner ;
     }
 
     @JsonProperty("name")

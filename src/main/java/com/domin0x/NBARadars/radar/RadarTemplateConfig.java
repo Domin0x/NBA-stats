@@ -9,7 +9,7 @@ import java.util.*;
 
 @Configuration
 public class RadarTemplateConfig {
-    public static Map<RadarType, List<StatType>> radarTypeCategoriesMap;
+    private static Map<RadarType, List<StatType>> radarTypeCategoriesMap;
 
     private static List<StatType> baseStatsOrdered = Arrays.asList(
             StatType.POINTS,
@@ -51,6 +51,11 @@ public class RadarTemplateConfig {
             radarTemplatesMap.put(type, new RadarLayout(type.name(), getCategories(type), type));
 
         return radarTemplatesMap;
+    }
+
+    @Bean
+    public Map<RadarType, List<StatType>> radarStatTypesMap(){
+        return radarTypeCategoriesMap;
     }
 
     private List<Category<Number>> getCategories(RadarType radarType) {
