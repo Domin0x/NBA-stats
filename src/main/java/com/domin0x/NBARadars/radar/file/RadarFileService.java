@@ -13,14 +13,16 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 
 @Service
 public class RadarFileService {
-    private static final String SUFFIX = ".png";
+    public static final String SUFFIX = ".png";
     private static final Logger logger = LoggerFactory.getLogger(RadarFileService.class);
 
     @Autowired
@@ -46,15 +48,24 @@ public class RadarFileService {
 
     private String categoriesToKeyString(List<Category<Number>> categories) {
         return categories.stream()
-                .map(this::mapRadarValueToString)
+                .map(this::mapCategoryToKeyPart)
                 .collect(Collectors.joining(""));
     }
 
-    private String mapRadarValueToString(Category<Number> category){
-        Number n = category.getValue();
-        if (n == null)
-            return "XXX";
-        return n.toString().replace(".", "111");
+    private String mapCategoryToKeyPart(Category<Number> category){
+        return category.getName() +
+               getStringRepresentation(category.getInner()) +
+               getStringRepresentation(category.getOuter()) +
+               getStringRepresentation(category.getValue());
+    }
+
+    private String getStringRepresentation(Number number) {
+        NumberFormat numFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
+        numFormat.setMaximumFractionDigits(2);
+
+        if (number == null)
+            return "-";
+        return numFormat.format(number);
     }
 
     @Async("processExecutor")
@@ -65,16 +76,28 @@ public class RadarFileService {
                 radarFileRepository.save(new RadarFile(key));
     }
 
-    public String getImageSrcLink(String key, Map<String, Object> map){
+    public String getImageSrcLink(String key, Map<String, Object> paramMap){
         if (useAmazonCache && checkIfKeyExists(key))
             return amazonService.getObjectURL(key);
 
+        return getURLWithParams(paramMap);
+    }
+
+    private String getURLWithParams(Map<String, Object> paramMap) {
         String baseURL = "/image/radar?";
-        String params = map.entrySet().stream()
-                .map(this::getEncodedRequestParam)
-                .collect(Collectors.joining("&"));
+        String params = getEncodedParams(paramMap);
 
         return baseURL + params;
+    }
+
+    private String getEncodedParams(Map<String, Object> map) {
+        return map.entrySet().stream()
+                    .map(this::getEncodedRequestParam)
+                    .collect(Collectors.joining("&"));
+    }
+
+    private String getEncodedRequestParam(Map.Entry <String, Object> entry) {
+        return entry.getKey() + "=" + getEncodedString(entry.getValue().toString());
     }
 
     private String getEncodedString(String string){
@@ -84,10 +107,6 @@ public class RadarFileService {
             logger.warn("Encoding unsuccessful for String \"" + string + "\"", e);
         return string;
         }
-    }
-
-    private String getEncodedRequestParam(Map.Entry <String, Object> entry) {
-        return entry.getKey() + "=" + getEncodedString(entry.getValue().toString());
     }
 
     public void deleteCachedImage(String key){

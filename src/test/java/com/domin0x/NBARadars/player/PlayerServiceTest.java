@@ -55,7 +55,7 @@ public class PlayerServiceTest {
         verify(playerRepository).findAll(isA(Pageable.class));
     }
 
-    @Test()
+    @Test
     public void whenListPlayersByName_thenShouldCallFindMethodWithPageableArgAndNameArg(){
         Pageable pageableStub = Mockito.mock(Pageable.class);
         Page<Player> pageStub = Mockito.mock(Page.class);
