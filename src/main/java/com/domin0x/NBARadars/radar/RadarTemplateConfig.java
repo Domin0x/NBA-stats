@@ -9,9 +9,9 @@ import java.util.*;
 
 @Configuration
 public class RadarTemplateConfig {
-    private static Map<RadarType, List<StatType>> radarTypeCategoriesMap;
+    private static final Map<RadarType, List<StatType>> radarTypeCategoriesMap;
 
-    private static List<StatType> baseStatsOrdered = Arrays.asList(
+    private static final List<StatType> baseStatsOrdered = Arrays.asList(
             StatType.POINTS,
             StatType.OFF_REBOUNDS,
             StatType.DEF_REBOUNDS,
@@ -24,7 +24,7 @@ public class RadarTemplateConfig {
             StatType.FIELD_GOALS_PCT,
             StatType.THREES_PCT
     );
-    private static List<StatType> scoringStatsOrdered = Arrays.asList(
+    private static final List<StatType> scoringStatsOrdered = Arrays.asList(
             StatType.POINTS,
             StatType.THREES_MADE,
             StatType.THREES_ATTEMPTED,

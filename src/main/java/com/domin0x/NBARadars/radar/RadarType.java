@@ -7,7 +7,7 @@ public enum RadarType {
     PLAYER_BASE_STATS("base stats"),
     SHOOTING_STATS("scoring");
 
-    private String text;
+    private final String text;
 
     RadarType(String text) {
         this.text = text;

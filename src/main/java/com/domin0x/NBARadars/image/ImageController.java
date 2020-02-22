@@ -1,13 +1,11 @@
 package com.domin0x.NBARadars.image;
 
 import com.domin0x.NBARadars.team.TeamService;
-import com.domin0x.NBARadars.radar.RadarForm;
 import com.domin0x.NBARadars.radar.file.RadarFileService;
 import com.domin0x.NBARadars.stats.PerGameStats;
 import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.player.Player;
 import com.domin0x.NBARadars.radar.*;
-import com.domin0x.NBARadars.team.Team;
 import com.domin0x.NBARadars.player.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,15 +40,18 @@ public class ImageController {
         int season = radarForm.getYear();
         RadarType type = radarForm.getRadarType();
 
-        Player player = playerService.getPlayerById(playerId);
-        PerGameStats stats = perGameStatsService.getPerGameStatsById(player, season);
-
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(type, stats);
-        String key = radarFileService.calculateKey(layout);
+        String key = radarFileService.calculateKey(getRadarLayout(playerId, season, type));
 
         return  radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
                                                              "season", season,
                                                              "type", type.getText()));
+    }
+
+    private RadarLayout getRadarLayout(int playerId, int season, RadarType type) {
+        Player player = playerService.getPlayerById(playerId);
+        PerGameStats stats = perGameStatsService.getPerGameStatsById(player, season);
+
+        return radarLayoutService.prepareRadarLayout(type, stats);
     }
 
 
@@ -63,13 +64,10 @@ public class ImageController {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
         PerGameStats stats;
-        if (teamId != null) {
-            Team team = teamService.getTeamById(teamId);
-            stats = perGameStatsService.getPerGameStatsById(player, team, season);
-        }
-        else {
+        if (teamId != null)
+            stats = perGameStatsService.getPerGameStatsById(player, teamService.getTeamById(teamId), season);
+        else
             stats = perGameStatsService.getPerGameStatsById(player, season);
-        }
 
         RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
         byte [] radarBinImage = radarWebService.getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));

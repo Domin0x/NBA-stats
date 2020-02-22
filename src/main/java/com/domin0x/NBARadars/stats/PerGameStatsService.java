@@ -19,7 +19,7 @@ public class PerGameStatsService {
      played and an extra record representing all games combined. The team_id column for this record
      will be filled with the id of a special team instance identified by abbreviation "TOT".
      This follows the default design of BasketballReference.com, which is the source of data used in this project*/
-    private final static String MULTIPLE_TEAMS_ABBREVIATION = "TOT";
+    public final static String MULTIPLE_TEAMS_ABBREVIATION = "TOT";
 
     @Autowired
     private PerGameStatsRepository repository;
@@ -42,14 +42,12 @@ public class PerGameStatsService {
             return null;
         if (statsList.size() == 1)
             return statsList.get(0);
-
         //if a player played for multiple teams in a single season find aggregated stats
         return statsList.stream()
                 .filter(x -> x.getId().getTeam().getAbbreviation().equals(MULTIPLE_TEAMS_ABBREVIATION))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No statline matching multiple-team abbreviation "
                                                              + MULTIPLE_TEAMS_ABBREVIATION));
-
     }
 
     public List<PerGameStats> getPerGameStatsForPlayer(Player player){return repository.findByIdPlayer(player);}

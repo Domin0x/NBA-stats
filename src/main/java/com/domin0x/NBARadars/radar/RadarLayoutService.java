@@ -3,7 +3,6 @@ package com.domin0x.NBARadars.radar;
 import com.domin0x.NBARadars.stats.PerGameStats;
 import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.player.Player;
-import com.domin0x.NBARadars.player.PlayerService;
 import com.domin0x.NBARadars.radar.category.Category;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

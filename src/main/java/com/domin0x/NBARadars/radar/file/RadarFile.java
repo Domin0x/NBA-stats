@@ -2,9 +2,6 @@ package com.domin0x.NBARadars.radar.file;
 
 import javax.persistence.*;
 
-/**
- * Created by Dominik on 11.09.2019.
- */
 @Entity
 @Table(name = "image_files")
 public class RadarFile {

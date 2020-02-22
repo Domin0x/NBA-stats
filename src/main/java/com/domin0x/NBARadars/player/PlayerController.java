@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -65,11 +64,10 @@ public class PlayerController {
                                                      Pageable pageable) {
         String searchPhrase = form.getSearchPhrase();
         Page<Player> playerPages = playerService.listPlayersByName(searchPhrase, pageable);
-        model.addAttribute("pageNumbers", getPageNumbersList(playerPages));
-
         String searchPhraseEncoded = URLEncoder.encode(searchPhrase, StandardCharsets.UTF_8);
-        model.addAttribute("searchPhraseEncoded", searchPhraseEncoded);
 
+        model.addAttribute("pageNumbers", getPageNumbersList(playerPages));
+        model.addAttribute("searchPhraseEncoded", searchPhraseEncoded);
         model.addAttribute("playerPages", playerPages);
         model.addAttribute("searchPhrase", searchPhrase);
         return "player/player-list";
@@ -92,14 +90,12 @@ public class PlayerController {
         Team team = teamService.getTeamById(teamId);
         PerGameStats stats = perGameStatsService.getPerGameStatsById(player, team, season);
 
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
-        String key = radarFileService.calculateKey(layout);
+        String key = radarFileService.calculateKey(radarLayoutService.prepareRadarLayout(radarType, stats));
 
         String imageLink = radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
                                                                         "season", season,
                                                                         "teamId", teamId,
                                                                         "type", type));
-
         model.addAttribute("imageLink", imageLink);
         return "player/player-radar";
     }

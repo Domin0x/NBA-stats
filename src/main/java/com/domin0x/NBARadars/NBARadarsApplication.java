@@ -28,7 +28,6 @@ public class NBARadarsApplication {
 		return threadPoolTaskExecutor;
 	}
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(NBARadarsApplication.class, args);
 	}

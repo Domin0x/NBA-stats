@@ -26,9 +26,9 @@ public enum StatType {
     THREES_PCT("fg3_pct", "3P%",PerGameStats::getFg3_pct),
     MINUTES("mp", PerGameStats::getMp);
 
-    private String pojoPropertyName;
-    private String displayName;
-    private Function<PerGameStats, BigDecimal> getStatValue;
+    private final String pojoPropertyName;
+    private final String displayName;
+    private final Function<PerGameStats, BigDecimal> getStatValue;
 
     StatType(String pojoPropertyName, Function<PerGameStats, BigDecimal> getStatValue) {
         this.pojoPropertyName = pojoPropertyName;
