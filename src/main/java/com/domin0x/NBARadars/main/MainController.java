@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -31,6 +32,7 @@ public class MainController {
     public String showMainPage(Model model) {
         model.addAttribute("radarForm", new RadarForm());
         List<Player> players = playerService.getPlayers();
+        players.sort(Comparator.comparing(Player::getName));
         model.addAttribute("players", players);
         model.addAttribute("seasons", perGameStatsService.getOrderedSeasonsForPlayer(players.get(0)));
 

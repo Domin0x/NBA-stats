@@ -1,33 +1,37 @@
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+.navbar{
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    line-height:1.2
+}
+.navbar-dark .navbar-brand
+{
+    color:#ffc107;
+    font-size:3rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
+.navbar-dark .navbar-brand:hover
+{
+    color:#ffc107;
 }
 
-li {
-  float: left;
+.navbar-dark .navbar-nav .nav-link {
+    color:#ffc107;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-li.page-item.active{
-    background-color: #d00000;
+#indexForm{
+    margin-top:0.15rem;
 }
 
-.disabled {
-    pointer-events: none;
-    opacity: 0.4;
-}
-
-/* Change the link color to #111 (black) on hover */
-li a:hover {
-  background-color: #111;
+.table td, .table th {
+    padding: .4rem;
 }

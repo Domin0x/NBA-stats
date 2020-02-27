@@ -2,44 +2,61 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-
     <title>Title</title>
+    <div th:replace="fragments/general :: head"></div>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+    <div th:replace="fragments/general :: navbar"></div>
 
-<div th:object="${player}">
-    <h1><span th:text="*{name} "></span></h1>
-    <p th:text="*{height} + ' cm, ' + *{weight} + ' kg'"></p>
-</div>
+    <div class="container" style="margin-top:30px;">
+        <div class="row">
+            <div th:object="${player}">
+                <h1><span th:text="*{name} "></span></h1>
+                <p th:text="*{height} + ' cm, ' + *{weight} + ' kg'"></p>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Team</th>
+                    <th>Minutes</th>
+                    <th>Pts</th>
+                    <th>Reb</th>
+                    <th>Oreb</th>
+                    <th>Dreb</th>
+                    <th>Ast</th>
+                    <th>Blk</th>
+                    <th>Stl</th>
+                    <th th:colspan="${radarTypes.length}" style="text-align: center;">Radar links</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="statline : ${stats}">
+                    <tr>
+                        <td th:text="${statline.id.season}"></td>
+                        <td th:text="${statline.id.team.name}"></td>
+                        <td th:text="${statline.mp}"></td>
+                        <td th:text="${statline.pts}"></td>
+                        <td th:text="${statline.reb}"></td>
+                        <td th:text="${statline.oreb}"></td>
+                        <td th:text="${statline.dreb}"></td>
+                        <td th:text="${statline.ast}"></td>
+                        <td th:text="${statline.blk}"></td>
+                        <td th:text="${statline.stl}"></td>
 
-<div>
-    <table>
-        <thead>
-        <tr>
-            <th>Year</th>
-            <th>Team</th>
-            <th>Points</th>
-            <th>Rebounds </th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="statline : ${stats}">
-            <tr>
-                <td><span th:text="${statline.id.season}"></span></td>
-                <td><span th:text="${statline.id.team.name}"></span></td>
-                <td><span th:text="${statline.pts}"></span></td>
-                <td><span th:text="${statline.reb}"></span></td>
 
-                <th:block th:each="radarType : ${radarTypes}">
-                    <td><a th:href="@{|/players/${player.id}/${statline.id.season}/${statline.id.team.id}/${radarType.getText()}|}">
-                        <span th:text="${radarType.getText()} + ' radar'"> </span></a></td>
+                        <th:block th:each="radarType : ${radarTypes}">
+                            <td><a th:href="@{|/players/${player.id}/${statline.id.season}/${statline.id.team.id}/${radarType.getText()}|}">
+                                <span th:text="${radarType.getText()}"> </span></a></td>
+                        </th:block>
+
+                    </tr>
                 </th:block>
-
-            </tr>
-        </th:block>
-        </tbody>
-    </table>
-</div>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

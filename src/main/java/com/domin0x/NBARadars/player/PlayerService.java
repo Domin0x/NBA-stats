@@ -28,7 +28,7 @@ public class PlayerService {
 
     public Player getPlayerById(int id){
         Optional<Player> optionalPlayer = repository.findById(id);
-        return optionalPlayer.orElseThrow(()-> new IllegalArgumentException("No player with id = " + id + " found"));
+        return optionalPlayer.orElseThrow(()-> new IllegalArgumentException("No player with id  = " + id + " found"));
     }
 
 }
