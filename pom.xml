@@ -79,7 +79,23 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>release</id>
+			<properties>
+				<activatedProperties>release</activatedProperties>
+			</properties>
+		</profile>
+	</profiles>
 
 <!--	<build>-->
 <!--		<testSourceDirectory>src/test/java</testSourceDirectory>-->
