@@ -38,7 +38,7 @@
     function populateDropdownYears(control) {
         var ID = control.value;
         $.ajax({
-            url: "http://localhost:8080/players/" + ID + "/allSeasons"
+            url: "/players/" + ID + "/allSeasons"
             }).then(function(data) {
                 var $dropdown = $('#year');
                 $dropdown.empty();
