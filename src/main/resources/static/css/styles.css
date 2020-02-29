@@ -35,3 +35,29 @@
 .table td, .table th {
     padding: .4rem;
 }
+
+.footer {
+    color:#ffc107;
+    line-height:1rem;
+    background-color:#343a40;
+      flex-shrink: 0;
+}
+
+.footer p {
+    margin-top:1rem;
+}
+footer a{
+    color:#ffc107;
+    text-decoration: underline;
+}
+
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  flex: 1 0 auto;
+}

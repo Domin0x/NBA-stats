@@ -2,8 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-    <title>Title</title>
+    <title>NBA radars</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -84,5 +83,6 @@
             </div>
         </div>
     </div>
+    <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
