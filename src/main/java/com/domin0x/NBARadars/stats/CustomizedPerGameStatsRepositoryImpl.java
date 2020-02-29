@@ -17,8 +17,18 @@ public class CustomizedPerGameStatsRepositoryImpl implements CustomizedPerGameSt
 
     //TODO gamesPlayed >= 10 un-hardcode this property
     public BigDecimal findQualifiedMaxAmountOfField(StatType statType) {
-        return (BigDecimal) em.createQuery("SELECT MAX(" + statType.getPojoPropertyName() + ") FROM PerGameStats stats WHERE stats.gamesPlayed >= 10")
+        String statName = statType.getPojoPropertyName();
+        String query ="SELECT " + statName +
+                "        FROM per_game_stats" +
+                "       WHERE games_played > 30 " +
+                "         AND mp > 30" +
+                "       ORDER BY ABS (0.95-ROUND(PERCENT_RANK() OVER (ORDER BY " + statName + ") ,3))" +
+                "       LIMIT 1";
+        return (BigDecimal) em.createNativeQuery(query)
                 .getSingleResult();
+
+//        return (BigDecimal) em.createQuery("SELECT MAX(" + statType.getPojoPropertyName() + ") FROM PerGameStats stats WHERE stats.gamesPlayed >= 10")
+//                .getSingleResult();
     }
 
     //TODO gamesPlayed >= 10 un-hardcode this property
