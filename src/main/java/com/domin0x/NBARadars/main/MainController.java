@@ -8,6 +8,7 @@ import com.domin0x.NBARadars.player.PlayerService;
 import com.domin0x.NBARadars.radar.RadarLayoutService;
 import com.domin0x.NBARadars.radar.RadarWebService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,5 +40,8 @@ public class MainController {
         return "index";
     }
 
-
+    @GetMapping("/test")
+    public ResponseEntity returnOK(){
+        return ResponseEntity.ok().build();
+    }
 }
