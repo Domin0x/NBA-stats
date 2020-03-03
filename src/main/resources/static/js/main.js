@@ -47,11 +47,3 @@
                 });
         });
     }
-
-    function init() {
-        var dropdown = document.getElementById('playerId');
-        console.log(dropdown);
-        populateDropdownYears(dropdown);
-    }
-
-    window.onload = init;
