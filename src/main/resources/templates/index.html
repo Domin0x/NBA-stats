@@ -54,7 +54,7 @@
                                 <label class="input-group-text">RadarType</label>
                             </div>
                             <select th:field="${radarForm.radarType}" id="radarType" class="form-control">
-                                <option th:each="radarType : ${T(com.domin0x.NBARadars.radar.RadarType).values()}" th:value="${radarType}" th:text="${radarType.text}"></option>
+                                <option th:each="radarType : ${radarTypes}" th:value="${radarType}" th:text="${radarType.text}"></option>
                             </select>
                         </div>
 

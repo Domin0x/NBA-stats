@@ -3,6 +3,7 @@ package com.domin0x.NBARadars.main;
 
 import com.domin0x.NBARadars.radar.RadarForm;
 import com.domin0x.NBARadars.player.Player;
+import com.domin0x.NBARadars.radar.RadarType;
 import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.player.PlayerService;
 import com.domin0x.NBARadars.radar.RadarLayoutService;
@@ -20,6 +21,7 @@ import java.util.List;
 @Controller
 public class MainController {
 
+    static final RadarType [] types = RadarType.values();
     @Autowired
     private PlayerService playerService;
     @Autowired
@@ -36,6 +38,7 @@ public class MainController {
         players.sort(Comparator.comparing(Player::getName));
         model.addAttribute("players", players);
         model.addAttribute("seasons", perGameStatsService.getOrderedSeasonsForPlayer(players.get(0)));
+        model.addAttribute("radarTypes", types);
 
         return "index";
     }
