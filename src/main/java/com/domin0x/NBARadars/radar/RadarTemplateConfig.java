@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Configuration
@@ -38,8 +39,10 @@ public class RadarTemplateConfig {
     );
 
     static {
-        radarTypeCategoriesMap = Map.of(RadarType.PLAYER_BASE_STATS, baseStatsOrdered,
-                                        RadarType.SHOOTING_STATS, scoringStatsOrdered);
+        radarTypeCategoriesMap = Collections.unmodifiableMap(Map.of(
+                        RadarType.PLAYER_BASE_STATS, baseStatsOrdered
+                       ,RadarType.SHOOTING_STATS, scoringStatsOrdered));
+
     }
     @Autowired
     private CategoryDataProvider categoryDataProvider;
@@ -62,8 +65,20 @@ public class RadarTemplateConfig {
         List<Category<Number>> categories = new ArrayList<>();
 
         for(StatType statType : radarTypeCategoriesMap.get(radarType)){
-            categories.add(new Category<>(categoryDataProvider.getName(statType), categoryDataProvider.minValue(statType), categoryDataProvider.maxValue(statType)));
+            categories.add(createCategory(statType));
         }
         return categories;
     }
+
+    private Category<Number> createCategory(StatType statType){
+        BigDecimal inner = categoryDataProvider.minValue(statType);
+        BigDecimal outer = categoryDataProvider.maxValue(statType);
+        if(statType.isNegative()){
+            BigDecimal tmp = inner;
+            inner = outer;
+            outer = tmp;
+        }
+        return new Category<>(categoryDataProvider.getName(statType), inner, outer);
+    }
+
 }
