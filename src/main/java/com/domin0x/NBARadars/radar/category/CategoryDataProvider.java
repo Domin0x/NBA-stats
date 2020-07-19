@@ -1,6 +1,6 @@
 package com.domin0x.NBARadars.radar.category;
 
-import com.domin0x.NBARadars.radar.StatType;
+import com.domin0x.NBARadars.stats.StatType;
 
 import java.math.BigDecimal;
 

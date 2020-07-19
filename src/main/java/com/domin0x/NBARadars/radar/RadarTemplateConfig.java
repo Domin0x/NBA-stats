@@ -1,6 +1,7 @@
 package com.domin0x.NBARadars.radar;
 
 import com.domin0x.NBARadars.radar.category.*;
+import com.domin0x.NBARadars.stats.StatType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
