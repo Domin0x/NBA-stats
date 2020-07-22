@@ -12,7 +12,9 @@
         <div class="row">
             <div th:object="${player}">
                 <h1><span th:text="*{name} "></span></h1>
-                <p th:text="*{height} + ' cm, ' + *{weight} + ' kg'"></p>
+                <div th:if= "*{height != null && weight != null}">
+                    <p th:text="*{height} + ' cm, ' + *{weight} + ' kg'"></p>
+                </div>
             </div>
         </div>
         <div class="row">
