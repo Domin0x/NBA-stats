@@ -28,7 +28,6 @@ public class RadarLayout {
     public RadarLayout(RadarLayout template) {
         this.title = template.title;
         this.type = template.type;
-        //title is immutable and type stays the same so these 2 don't have to be deep copied
         //"deep copy" categories list - copy only name, inner, outer. Actual value field will be set for each axis later
         this.categories = new ArrayList<>();
 
