@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Objects;
 
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"name", "inner", "outer"})
 public class Category <T extends Number>{
 
@@ -19,10 +18,7 @@ public class Category <T extends Number>{
     private T value;
 
     public Category(String name, T inner, T outer) {
-        this.name = Objects.requireNonNull(name);
-        this.inner = Objects.requireNonNull(inner);
-        this.outer = Objects.requireNonNull(outer);
-        this.value = Objects.requireNonNull(inner);
+        this(name, inner, outer, inner);
     }
 
     public Category(String name, T inner, T outer, T value) {

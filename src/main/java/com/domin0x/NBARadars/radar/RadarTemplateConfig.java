@@ -72,14 +72,10 @@ public class RadarTemplateConfig {
     }
 
     private Category<Number> createCategory(StatType statType){
-        BigDecimal inner = categoryDataProvider.minValue(statType);
-        BigDecimal outer = categoryDataProvider.maxValue(statType);
-        if(statType.isNegative()){
-            BigDecimal tmp = inner;
-            inner = outer;
-            outer = tmp;
-        }
-        return new Category<>(categoryDataProvider.getName(statType), inner, outer);
+        BigDecimal min = categoryDataProvider.minValue(statType);
+        BigDecimal max = categoryDataProvider.maxValue(statType);
+        return statType.isNegative() ? new Category<>(categoryDataProvider.getName(statType), min, max)
+                                     : new Category<>(categoryDataProvider.getName(statType), max, min);
     }
 
 }
