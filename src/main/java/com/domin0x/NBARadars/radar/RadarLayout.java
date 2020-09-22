@@ -30,28 +30,22 @@ public class RadarLayout {
         this.type = template.type;
         //"deep copy" categories list - copy only name, inner, outer. Actual value field will be set for each axis later
         this.categories = new ArrayList<>();
-
         for (Category<Number> cat : template.categories)
             this.categories.add(new Category<>(cat.getName(), cat.getInner(), cat.getOuter()));
     }
 
-    @JsonProperty("name")
     public String getTitle() {
         return title;
     }
 
-
-    @JsonProperty("name")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @JsonProperty("categories")
     public List<Category<Number>> getCategories() {
         return categories;
     }
 
-    @JsonProperty("categories")
     public void setCategories(List<Category<Number>> categories) {
         this.categories = categories;
     }
