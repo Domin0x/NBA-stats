@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "per_game_stats")
-public class PerGameStats {
+public class PerGameStats implements StatLine {
 
     @EmbeddedId
     private PerGameStatsId id;

@@ -8,7 +8,6 @@ import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.stats.StatType;
 import com.domin0x.NBARadars.team.Team;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -21,8 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
+import static com.domin0x.NBARadars.radar.RadarTemplateConfig.statTypesByRadarTemplate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
@@ -31,12 +31,12 @@ import static org.mockito.ArgumentMatchers.anyInt;
 public class RadarLayoutServiceTest {
     public static final StatType SAMPLE_STATTYPE = StatType.ASSISTS;
     public static final BigDecimal MAX = BigDecimal.TEN;
-    public static final BigDecimal MIN = BigDecimal.ONE;
-    public static final BigDecimal VALUE = BigDecimal.valueOf(5);
+    public static final BigDecimal MIN = BigDecimal.ZERO;
+    public static final BigDecimal VALUE = BigDecimal.ONE;
+    public static final Category<Number> SAMPLE_CATEGORY = new Category<>(SAMPLE_STATTYPE.getDisplayName(), MIN, MAX, VALUE);
     public static final String SAMPLE_NAME = "Name";
     public static final int SAMPLE_SEASON = 2015;
     public static final RadarType SAMPLE_RADARTYPE = RadarType.PLAYER_BASE_STATS;
-    public static final Category<Number> SAMPLE_CATEGORY = new Category<Number>(SAMPLE_STATTYPE.getDisplayName(), MIN, MAX);
 
     @Autowired
     RadarLayoutService service;
@@ -45,41 +45,30 @@ public class RadarLayoutServiceTest {
     PerGameStatsService statsService;
 
     @MockBean
-    private Map<RadarType, RadarLayout> radarTemplatesMap;
-
-    @MockBean
-    private Map<RadarType, List<StatType>> radarStatTypeMap;
-
-    private RadarLayout sampleLayout;
-
-    @Before
-    public void setSampleLayout() {
-        sampleLayout =  new RadarLayout(SAMPLE_RADARTYPE.getText(), List.of(SAMPLE_CATEGORY), SAMPLE_RADARTYPE);
-    }
+    RadarPrototypeFactory radarPrototypeFactory;
 
     @Test
-    public void shouldCreateLayoutWithValuesSetFromTemplate(){
+    public void shouldFillLayoutWithProvidedData(){
         PerGameStats stats = createStatsTestData(VALUE, SAMPLE_NAME, SAMPLE_SEASON);
+        RadarLayout templateLayout = createFakeTemplateLayout();
 
         Mockito.when(statsService.getPerGameStatsById(any(Player.class), anyInt())).thenReturn(stats);
-        Mockito.when(radarTemplatesMap.get(any(RadarType.class))).thenReturn(sampleLayout);
-        Mockito.when(radarStatTypeMap.get(any(RadarType.class))).thenReturn(List.of(SAMPLE_STATTYPE));
+        Mockito.when(radarPrototypeFactory.getLayoutFromTemplate(any(RadarType.class))).thenReturn(templateLayout);
 
-        RadarLayout layout = service.prepareRadarLayout(RadarType.PLAYER_BASE_STATS, stats);
+        RadarLayout testLayout = service.prepareRadarLayout(RadarType.PLAYER_BASE_STATS, stats);
+        BigDecimal testStatValue = getValueForCategory(testLayout, SAMPLE_STATTYPE);
 
-        Assert.assertEquals(sampleLayout.getCategories().size(), layout.getCategories().size());
-        Assert.assertEquals(sampleLayout.getCategories().get(0).getInner(), layout.getCategories().get(0).getInner());
-        Assert.assertEquals(sampleLayout.getCategories().get(0).getOuter(), layout.getCategories().get(0).getOuter());
-        Assert.assertEquals(sampleLayout.getCategories().get(0).getName(), layout.getCategories().get(0).getName());
-        Assert.assertEquals(VALUE, layout.getCategories().get(0).getValue());
-
+        Assert.assertTrue(testLayout.getTitle().contains(SAMPLE_NAME));
+        Assert.assertTrue(testLayout.getTitle().contains(String.valueOf(SAMPLE_SEASON)));
+        Assert.assertEquals(VALUE, testStatValue);
     }
 
     @Test
     public void whenGivenValidRadarLayoutShouldReturnJsonString() throws JsonProcessingException {
-        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"categories\":[{\"name\":\"Assists\",\"inner\":1,\"outer\":10,\"value\":1}]}";
-        String json = service.radarToJsonString(sampleLayout);
-        
+        RadarLayout expectedLayout =  new RadarLayout(SAMPLE_RADARTYPE.getText(), List.of(SAMPLE_CATEGORY), SAMPLE_RADARTYPE);
+        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"categories\":[{\"name\":\"Assists\",\"inner\":0,\"outer\":10,\"value\":1}]}";
+        String json = service.radarToJsonString(expectedLayout);
+
         Assert.assertEquals(expectedJSON, json);
     }
 
@@ -99,5 +88,21 @@ public class RadarLayoutServiceTest {
         return stats;
     }
 
+    private BigDecimal getValueForCategory(RadarLayout layout, StatType statType) {
+        return (BigDecimal) layout.getCategories().stream()
+                .filter(category -> category.getName().equals(statType.getDisplayName()))
+                .map(Category::getValue)
+                .findFirst()
+                .get();
+    }
+
+    private RadarLayout createFakeTemplateLayout() {
+        List<Category<Number>> fakeCategories =
+                statTypesByRadarTemplate.get(SAMPLE_RADARTYPE).stream()
+                        .map(statType -> new Category<Number>(statType.getDisplayName(), MIN, MAX))
+                        .collect(Collectors.toList());
+
+        return new RadarLayout(SAMPLE_RADARTYPE.getText(), fakeCategories, SAMPLE_RADARTYPE);
+    }
 
 }

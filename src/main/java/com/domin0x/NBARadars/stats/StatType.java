@@ -51,8 +51,8 @@ public enum StatType {
         return pojoPropertyName;
     }
 
-    public BigDecimal getStatValue(PerGameStats stats) {
-        return getStatValue.apply(stats);
+    public BigDecimal getStatValue(StatLine stats) {
+        return getStatValue.apply((PerGameStats) stats);
     }
 
     public boolean isNegative() {

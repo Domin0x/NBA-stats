@@ -1,6 +1,6 @@
 package com.domin0x.NBARadars.radar;
 
-import com.domin0x.NBARadars.stats.IStat;
+import com.domin0x.NBARadars.stats.StatLine;
 import com.domin0x.NBARadars.stats.PerGameStats;
 import com.domin0x.NBARadars.stats.PerGameStatsService;
 import com.domin0x.NBARadars.player.Player;
@@ -11,22 +11,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
+
+import static com.domin0x.NBARadars.radar.RadarTemplateConfig.statTypesByRadarTemplate;
 
 @Service
 public class RadarLayoutService {
 
-    @Resource
-    private Map<RadarType, RadarLayout> radarTemplatesMap;
-
-    @Resource
-    private Map<RadarType, List<StatType>> radarStatTypesMap;
+    @Autowired
+    RadarPrototypeFactory radarPrototypeFactory;
 
     @Autowired
     private PerGameStatsService perGameStatsService;
-
 
     public RadarLayout prepareRadarLayout(RadarType radarType, Player player, int season){
         PerGameStats stats =  perGameStatsService.getPerGameStatsById(player, season);
@@ -34,7 +30,7 @@ public class RadarLayoutService {
     }
 
     public RadarLayout prepareRadarLayout(RadarType radarType, PerGameStats stats){
-        RadarLayout layout = createRadarLayoutFromTemplate(radarType);
+        RadarLayout layout = radarPrototypeFactory.getLayoutFromTemplate(radarType);
         layout.setTitle(generateTitle(radarType, stats));
         fillLayoutData(layout, stats);
         return layout;
@@ -44,14 +40,10 @@ public class RadarLayoutService {
         return stats.getId().getPlayer().getName() + " " + stats.getId().getSeason() + " " + radarType.getText();
     }
 
-    private RadarLayout createRadarLayoutFromTemplate(RadarType templateKey){
-        return new RadarLayout(radarTemplatesMap.get(templateKey));
-    }
-
-    private void fillLayoutData(RadarLayout layout, IStat stats){
+    private void fillLayoutData(RadarLayout layout, StatLine stats){
         List<Category<Number>> categories = layout.getCategories();
         int i = 0;
-        for(StatType statType : radarStatTypesMap.get(layout.getType())){
+        for(StatType statType : statTypesByRadarTemplate.get(layout.getType())){
             categories.get(i).setValue(statType.getStatValue(stats));
             i++;
         }
