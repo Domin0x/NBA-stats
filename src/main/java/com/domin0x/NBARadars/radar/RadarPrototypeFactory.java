@@ -1,14 +1,11 @@
 package com.domin0x.NBARadars.radar;
 
 import com.domin0x.NBARadars.radar.category.Category;
-import com.domin0x.NBARadars.radar.category.PerGameCategoryDataProvider;
 import com.domin0x.NBARadars.stats.StatType;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +15,13 @@ import static com.domin0x.NBARadars.radar.RadarTemplateConfig.statTypesByRadarTe
 
 @Service
 public class RadarPrototypeFactory {
-    @Autowired
-    private PerGameCategoryDataProvider categoryDataProvider;
 
+    private Map<StatType,Category<Number>> categoriesByStatTypes;
     private Map<RadarType, RadarLayout> radarTemplatesMap;
+
+    public RadarPrototypeFactory(Map<StatType, Category<Number>> categoriesByStatTypes) {
+        this.categoriesByStatTypes = categoriesByStatTypes;
+    }
 
     @PostConstruct
     private void init(){
@@ -43,17 +43,8 @@ public class RadarPrototypeFactory {
     private List<Category<Number>> getCategories(RadarType radarType) {
         List<Category<Number>> categories = new ArrayList<>();
 
-        for(StatType statType : statTypesByRadarTemplate.get(radarType)){
-            categories.add(createCategory(statType));
-        }
+        for(StatType statType : statTypesByRadarTemplate.get(radarType))
+            categories.add(categoriesByStatTypes.get(statType));
         return categories;
     }
-
-    private Category<Number> createCategory(StatType statType){
-        BigDecimal min = categoryDataProvider.minValue(statType);
-        BigDecimal max = categoryDataProvider.maxValue(statType);
-        return statType.isNegative() ? new Category<>(categoryDataProvider.getName(statType), max, min)
-                : new Category<>(categoryDataProvider.getName(statType), min, max);
-    }
-
 }
