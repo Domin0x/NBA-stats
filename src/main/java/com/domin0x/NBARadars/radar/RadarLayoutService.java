@@ -30,7 +30,7 @@ public class RadarLayoutService {
     }
 
     public RadarLayout prepareRadarLayout(RadarType radarType, PerGameStats stats){
-        RadarLayout layout = radarPrototypeFactory.getLayoutFromTemplate(radarType);
+        RadarLayout layout = radarPrototypeFactory.getClonedLayoutFromPrototype(radarType);
         layout.setTitle(generateTitle(radarType, stats));
         fillLayoutData(layout, stats);
         return layout;

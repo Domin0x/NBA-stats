@@ -53,7 +53,7 @@ public class RadarLayoutServiceTest {
         RadarLayout templateLayout = createFakeTemplateLayout();
 
         Mockito.when(statsService.getPerGameStatsById(any(Player.class), anyInt())).thenReturn(stats);
-        Mockito.when(radarPrototypeFactory.getLayoutFromTemplate(any(RadarType.class))).thenReturn(templateLayout);
+        Mockito.when(radarPrototypeFactory.getClonedLayoutFromPrototype(any(RadarType.class))).thenReturn(templateLayout);
 
         RadarLayout testLayout = service.prepareRadarLayout(RadarType.PLAYER_BASE_STATS, stats);
         BigDecimal testStatValue = getValueForCategory(testLayout, SAMPLE_STATTYPE);

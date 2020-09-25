@@ -20,7 +20,7 @@ public class CategoriesConfig {
             categoriesByStatTypes.put(statType, createCategory(statType));
     }
 
-    @Bean
+    @Bean("categoriesPrototypes")
     Map<StatType,Category<Number>> categoriesByStatTypes(){
         return categoriesByStatTypes;
     }
