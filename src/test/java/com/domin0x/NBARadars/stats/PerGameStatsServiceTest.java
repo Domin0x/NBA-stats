@@ -3,9 +3,7 @@ package com.domin0x.NBARadars.stats;
 
 import com.domin0x.NBARadars.player.Player;
 import com.domin0x.NBARadars.team.Team;
-import com.domin0x.NBARadars.team.TeamRepository;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -14,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.domin0x.NBARadars.stats.PerGameStatsService.MULTIPLE_TEAMS_ABBREVIATION;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +38,7 @@ public class PerGameStatsServiceTest {
                 any(Player.class), any(Team.class), any(Integer.class)))
                 .thenReturn(stats);
 
-        PerGameStats obtainedStats = statsService.getPerGameStatsById(player, team, season);
+        PerGameStats obtainedStats = statsService.getPerGameStatsById(player, season, team);
         Assert.assertNotNull(obtainedStats);
     }
 

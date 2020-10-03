@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +32,7 @@ public class PerGameStatsService {
         return repository.findAll();
     }
 
-    public PerGameStats getPerGameStatsById(Player player, Team team, int season){
+    public PerGameStats getPerGameStatsById(Player player, int season, Team team){
         return repository.findByIdPlayerAndIdTeamAndIdSeason(player,team,season);
     }
 

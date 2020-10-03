@@ -88,7 +88,7 @@ public class PlayerController {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
         Team team = teamService.getTeamById(teamId);
-        PerGameStats stats = perGameStatsService.getPerGameStatsById(player, team, season);
+        PerGameStats stats = perGameStatsService.getPerGameStatsById(player, season, team);
 
         String key = radarFileService.calculateKey(radarLayoutService.prepareRadarLayout(radarType, stats));
 

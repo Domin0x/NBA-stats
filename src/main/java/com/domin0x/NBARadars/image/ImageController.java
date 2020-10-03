@@ -63,15 +63,12 @@ public class ImageController {
                                 @RequestParam String type) throws IOException {
         RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
-        PerGameStats stats;
-        if (teamId != null)
-            stats = perGameStatsService.getPerGameStatsById(player, teamService.getTeamById(teamId), season);
-        else
-            stats = perGameStatsService.getPerGameStatsById(player, season);
+        PerGameStats stats = (teamId == null) ? perGameStatsService.getPerGameStatsById(player, season) :
+                                                perGameStatsService.getPerGameStatsById(player, season
+                                                         ,teamService.getTeamById(teamId));
 
         RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
         byte [] radarBinImage = radarWebService.getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
-
         radarFileService.cacheImage(layout, radarBinImage);
 
         return radarBinImage;
