@@ -16,10 +16,10 @@ import java.util.Map;
 
 
 @Controller
-@RequestMapping(ImageController.REQUEST_MAPPING_CONTOLLER_URL)
+@RequestMapping(ImageController.REQUEST_MAPPING_BASE)
 public class ImageController {
-    public static final String REQUEST_MAPPING_CONTOLLER_URL = "/image";
-    public static final String REQUEST_MAPPING_RADAR_PATH_COMPONENT = "/radar";
+    public static final String REQUEST_MAPPING_BASE = "/image";
+    public static final String REQUEST_MAPPING_RADAR = "/radar";
 
     @Autowired
     private PlayerService playerService;
@@ -41,7 +41,7 @@ public class ImageController {
         int playerId = radarForm.getPlayerId();
         int season = radarForm.getYear();
         RadarType type = radarForm.getRadarType();
-        String key = radarFileService.calculateKey(getRadarLayout(playerId, season, type));
+        String key = radarFileService.generateKey(getRadarLayout(playerId, season, type));
 
         return  radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
                                                              "season", season,

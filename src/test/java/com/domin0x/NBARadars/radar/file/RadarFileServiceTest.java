@@ -1,6 +1,5 @@
 package com.domin0x.NBARadars.radar.file;
 
-import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.domin0x.NBARadars.amazon.AmazonService;
 import com.domin0x.NBARadars.radar.RadarLayout;
 import com.domin0x.NBARadars.radar.RadarType;
@@ -109,7 +108,7 @@ public class RadarFileServiceTest {
         RadarLayout radarLayout = new RadarLayout(exampleTitle, categories, RadarType.PLAYER_BASE_STATS);
         String expected = "JamesJones2016base_stats" + "pts030.2220ast010.11" + RadarFileService.SUFFIX;
 
-        String result = radarFileService.calculateKey(radarLayout);
+        String result = radarFileService.generateKey(radarLayout);
         Assert.assertEquals(expected , result);
     }
 

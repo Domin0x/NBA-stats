@@ -90,7 +90,7 @@ public class PlayerController {
         Team team = teamService.getTeamById(teamId);
         PerGameStats stats = perGameStatsService.getPerGameStatsById(player, season, team);
 
-        String key = radarFileService.calculateKey(radarLayoutService.prepareRadarLayout(radarType, stats));
+        String key = radarFileService.generateKey(radarLayoutService.prepareRadarLayout(radarType, stats));
 
         String imageLink = radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
                                                                         "season", season,
