@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -18,6 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.domin0x.NBARadars.image.ImageController.REQUEST_MAPPING_CONTOLLER_URL;
+import static com.domin0x.NBARadars.image.ImageController.REQUEST_MAPPING_RADAR_PATH_COMPONENT;
 
 
 @Service
@@ -84,16 +91,18 @@ public class RadarFileService {
     }
 
     private String getURLWithParams(Map<String, Object> paramMap) {
-        String baseURL = "/image/radar?";
-        String params = getEncodedParams(paramMap);
+        MultiValueMap<String, String> params = convertToMultiValueMap(paramMap);
+        final String path = REQUEST_MAPPING_CONTOLLER_URL + REQUEST_MAPPING_RADAR_PATH_COMPONENT;
 
-        return baseURL + params;
+        return UriComponentsBuilder.fromPath(path).queryParams(params).build().encode().toUriString();
     }
 
-    private String getEncodedParams(Map<String, Object> map) {
-        return map.entrySet().stream()
-                    .map(this::getEncodedRequestParam)
-                    .collect(Collectors.joining("&"));
+    private MultiValueMap<String, String> convertToMultiValueMap(Map<String, Object> paramMap) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+        for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
+            params.add(entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        return params;
     }
 
     private String getEncodedRequestParam(Map.Entry <String, Object> entry) {

@@ -16,8 +16,10 @@ import java.util.Map;
 
 
 @Controller
-@RequestMapping("/image")
+@RequestMapping(ImageController.REQUEST_MAPPING_CONTOLLER_URL)
 public class ImageController {
+    public static final String REQUEST_MAPPING_CONTOLLER_URL = "/image";
+    public static final String REQUEST_MAPPING_RADAR_PATH_COMPONENT = "/radar";
 
     @Autowired
     private PlayerService playerService;
@@ -39,7 +41,6 @@ public class ImageController {
         int playerId = radarForm.getPlayerId();
         int season = radarForm.getYear();
         RadarType type = radarForm.getRadarType();
-
         String key = radarFileService.calculateKey(getRadarLayout(playerId, season, type));
 
         return  radarFileService.getImageSrcLink(key, Map.of("playerId", playerId,
@@ -61,13 +62,12 @@ public class ImageController {
                                 @RequestParam int season,
                                 @RequestParam(required = false) Integer teamId,
                                 @RequestParam String type) throws IOException {
-        RadarType radarType = RadarType.fromString(type);
         Player player = playerService.getPlayerById(playerId);
         PerGameStats stats = (teamId == null) ? perGameStatsService.getPerGameStatsById(player, season) :
-                                                perGameStatsService.getPerGameStatsById(player, season
-                                                         ,teamService.getTeamById(teamId));
+                                                perGameStatsService.getPerGameStatsById(player, season,
+                                                        teamService.getTeamById(teamId));
 
-        RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, stats);
+        RadarLayout layout = radarLayoutService.prepareRadarLayout(RadarType.fromString(type), stats);
         byte [] radarBinImage = radarWebService.getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
         radarFileService.cacheImage(layout, radarBinImage);
 
