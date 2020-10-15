@@ -28,8 +28,8 @@ public class CategoriesConfig {
     private Category<Number> createCategory(StatType statType){
         var min = categoryDataProvider.minValue(statType);
         var max = categoryDataProvider.maxValue(statType);
-        return statType.getAxisDirection().equals(AxisDirection.DESCENDING) ?
-                  new Category<>(categoryDataProvider.getName(statType), max, min)
-                : new Category<>(categoryDataProvider.getName(statType), min, max);
+        return (statType.getAxisDirection() == AxisDirection.ASCENDING)
+                ? new Category<>(categoryDataProvider.getName(statType), min, max)
+                : new Category<>(categoryDataProvider.getName(statType), max, min);
     }
 }
