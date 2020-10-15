@@ -29,7 +29,7 @@ public enum StatType {
     private final Function<PerGameStats, BigDecimal> getStatValue;
     private final boolean isNegative;
 
-        StatType(String pojoPropertyName, Function<PerGameStats, BigDecimal> getStatValue, boolean isNegative) {
+    StatType(String pojoPropertyName, Function<PerGameStats, BigDecimal> getStatValue, boolean isNegative) {
         this.pojoPropertyName = pojoPropertyName;
         this.getStatValue = getStatValue;
         this.isNegative = isNegative;
@@ -60,9 +60,9 @@ public enum StatType {
     }
 
     public static StatType fromString(String pojoPropertyName) {
-        for (StatType t : StatType.values()) {
-            if (t.pojoPropertyName.equalsIgnoreCase(pojoPropertyName))
-                return t;
+        for (var statType : StatType.values()) {
+            if (statType.pojoPropertyName.equalsIgnoreCase(pojoPropertyName))
+                return statType;
         }
         throw new  IllegalArgumentException("No stat type mapped to '" + pojoPropertyName + "'!");
     }

@@ -25,9 +25,6 @@ public class CustomizedPerGameStatsRepositoryImpl implements CustomizedPerGameSt
                 "       LIMIT 1";
         return (BigDecimal) em.createNativeQuery(query)
                 .getSingleResult();
-
-//        return (BigDecimal) em.createQuery("SELECT MAX(" + statType.getPojoPropertyName() + ") FROM PerGameStats stats WHERE stats.gamesPlayed >= 10")
-//                .getSingleResult();
     }
 
     //TODO gamesPlayed >= 10 un-hardcode this property

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,11 +31,11 @@ public class PerGameStatsService {
         return repository.findAll();
     }
 
-    public PerGameStats getPerGameStatsById(Player player, int season, Team team){
+    public PerGameStats getPerGameStatsById(Player player, int season, Team team) {
         return repository.findByIdPlayerAndIdTeamAndIdSeason(player,team,season);
     }
 
-    public PerGameStats getPerGameStatsById(Player player, int season){
+    public PerGameStats getPerGameStatsById(Player player, int season) {
         List<PerGameStats> statsList = repository.findByIdPlayerAndIdSeason(player, season);
         if (statsList.size() == 0)
             return null;
@@ -50,9 +49,10 @@ public class PerGameStatsService {
                                                              + MULTIPLE_TEAMS_ABBREVIATION));
     }
 
-    public List<PerGameStats> getPerGameStatsForPlayer(Player player){return repository.findByIdPlayer(player);}
+    public List<PerGameStats> getPerGameStatsForPlayer(Player player) {
+        return repository.findByIdPlayer(player);}
 
-    public List<Integer> getOrderedSeasonsForPlayer(Player player){
+    public List<Integer> getOrderedSeasonsForPlayer(Player player) {
         return repository.findByIdPlayer(player).stream()
                 .map(stats -> stats.getId().getSeason())
                 .distinct()
@@ -60,11 +60,28 @@ public class PerGameStatsService {
                 .collect(Collectors.toList());
     }
 
-    public BigDecimal getMaxNoOfPts(){return repository.findMaxAmountOfPoints();}
-    public Integer getMaxSeason(){return repository.findMaxSeason();}
-    public Integer getMinSeason(){return repository.findMinSeason();}
-    public List <Integer> findAllSeasons(){return repository.findAllSeasons();}
-    public BigDecimal getQualifiedMaxOfField(StatType statType){return repository.findQualifiedMaxAmountOfField(statType);}
-    public BigDecimal getQualifiedMinOfField(StatType statType){return repository.findQualifiedMinAmountOfField(statType);}
+    public BigDecimal getMaxNoOfPts() {
+        return repository.findMaxAmountOfPoints();
+    }
+
+    public Integer getMaxSeason() {
+        return repository.findMaxSeason();
+    }
+
+    public Integer getMinSeason() {
+        return repository.findMinSeason();
+    }
+
+    public List <Integer> findAllSeasons() {
+        return repository.findAllSeasons();
+    }
+
+    public BigDecimal getQualifiedMaxOfField(StatType statType){
+        return repository.findQualifiedMaxAmountOfField(statType);
+    }
+
+    public BigDecimal getQualifiedMinOfField(StatType statType){
+        return repository.findQualifiedMinAmountOfField(statType);
+    }
 
 }
