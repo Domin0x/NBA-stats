@@ -2,8 +2,8 @@ package com.domin0x.NBARadars.image;
 
 import com.domin0x.NBARadars.team.TeamService;
 import com.domin0x.NBARadars.radar.file.RadarFileService;
-import com.domin0x.NBARadars.stats.PerGameStats;
-import com.domin0x.NBARadars.stats.PerGameStatsService;
+import com.domin0x.NBARadars.stats.pergame.PerGameStats;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
 import com.domin0x.NBARadars.player.Player;
 import com.domin0x.NBARadars.radar.*;
 import com.domin0x.NBARadars.player.PlayerService;

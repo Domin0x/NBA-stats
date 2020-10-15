@@ -1,7 +1,7 @@
 package com.domin0x.NBARadars.radar.category;
 
-import com.domin0x.NBARadars.stats.StatType;
-import com.domin0x.NBARadars.stats.PerGameStatsService;
+import com.domin0x.NBARadars.stats.pergame.StatType;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
 package com.domin0x.NBARadars.radar.category;
 
-import com.domin0x.NBARadars.stats.StatType;
+import com.domin0x.NBARadars.stats.AxisDirection;
+import com.domin0x.NBARadars.stats.pergame.StatType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +26,10 @@ public class CategoriesConfig {
     }
 
     private Category<Number> createCategory(StatType statType){
-        BigDecimal min = categoryDataProvider.minValue(statType);
-        BigDecimal max = categoryDataProvider.maxValue(statType);
-        return statType.isNegative() ? new Category<>(categoryDataProvider.getName(statType), max, min)
+        var min = categoryDataProvider.minValue(statType);
+        var max = categoryDataProvider.maxValue(statType);
+        return statType.getAxisDirection().equals(AxisDirection.DESCENDING) ?
+                  new Category<>(categoryDataProvider.getName(statType), max, min)
                 : new Category<>(categoryDataProvider.getName(statType), min, max);
     }
 }

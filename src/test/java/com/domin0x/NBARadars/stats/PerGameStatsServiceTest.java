@@ -2,6 +2,9 @@ package com.domin0x.NBARadars.stats;
 
 
 import com.domin0x.NBARadars.player.Player;
+import com.domin0x.NBARadars.stats.pergame.PerGameStats;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsRepository;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
 import com.domin0x.NBARadars.team.Team;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static com.domin0x.NBARadars.stats.PerGameStatsService.MULTIPLE_TEAMS_ABBREVIATION;
+import static com.domin0x.NBARadars.stats.pergame.PerGameStatsService.MULTIPLE_TEAMS_ABBREVIATION;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)

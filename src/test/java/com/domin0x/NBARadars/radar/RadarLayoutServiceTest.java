@@ -2,10 +2,10 @@ package com.domin0x.NBARadars.radar;
 
 import com.domin0x.NBARadars.player.Player;
 import com.domin0x.NBARadars.radar.category.Category;
-import com.domin0x.NBARadars.stats.PerGameStats;
-import com.domin0x.NBARadars.stats.PerGameStatsId;
-import com.domin0x.NBARadars.stats.PerGameStatsService;
-import com.domin0x.NBARadars.stats.StatType;
+import com.domin0x.NBARadars.stats.pergame.PerGameStats;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsId;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
+import com.domin0x.NBARadars.stats.pergame.StatType;
 import com.domin0x.NBARadars.team.Team;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;

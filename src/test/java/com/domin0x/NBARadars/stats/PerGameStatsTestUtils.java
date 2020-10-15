@@ -1,6 +1,8 @@
 package com.domin0x.NBARadars.stats;
 
 import com.domin0x.NBARadars.player.Player;
+import com.domin0x.NBARadars.stats.pergame.PerGameStats;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsId;
 import com.domin0x.NBARadars.team.Team;
 
 public class PerGameStatsTestUtils {

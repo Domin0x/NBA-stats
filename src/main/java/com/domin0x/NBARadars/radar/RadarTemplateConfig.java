@@ -1,6 +1,6 @@
 package com.domin0x.NBARadars.radar;
 
-import com.domin0x.NBARadars.stats.StatType;
+import com.domin0x.NBARadars.stats.pergame.StatType;
 
 import java.util.*;
 

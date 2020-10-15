@@ -1,4 +1,4 @@
-package com.domin0x.NBARadars.stats;
+package com.domin0x.NBARadars.stats.pergame;
 
 import java.math.BigDecimal;
 

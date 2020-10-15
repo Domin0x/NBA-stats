@@ -1,4 +1,6 @@
-package com.domin0x.NBARadars.stats;
+package com.domin0x.NBARadars.stats.pergame;
+
+import com.domin0x.NBARadars.stats.StatLine;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

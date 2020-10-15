@@ -4,7 +4,7 @@ package com.domin0x.NBARadars.main;
 import com.domin0x.NBARadars.radar.RadarForm;
 import com.domin0x.NBARadars.player.Player;
 import com.domin0x.NBARadars.radar.RadarType;
-import com.domin0x.NBARadars.stats.PerGameStatsService;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
 import com.domin0x.NBARadars.player.PlayerService;
 import com.domin0x.NBARadars.radar.RadarLayoutService;
 import com.domin0x.NBARadars.radar.RadarWebService;

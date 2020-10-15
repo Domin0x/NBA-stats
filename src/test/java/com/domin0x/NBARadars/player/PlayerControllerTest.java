@@ -2,7 +2,7 @@ package com.domin0x.NBARadars.player;
 
 import com.domin0x.NBARadars.radar.RadarLayoutService;
 import com.domin0x.NBARadars.radar.file.RadarFileService;
-import com.domin0x.NBARadars.stats.PerGameStatsService;
+import com.domin0x.NBARadars.stats.pergame.PerGameStatsService;
 import com.domin0x.NBARadars.team.TeamService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
