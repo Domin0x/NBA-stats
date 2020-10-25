@@ -66,7 +66,9 @@ public class RadarLayoutServiceTest {
     @Test
     public void whenGivenValidRadarLayoutShouldReturnJsonString() throws JsonProcessingException {
         RadarLayout expectedLayout =  new RadarLayout(SAMPLE_RADARTYPE.getText(), List.of(SAMPLE_CATEGORY), SAMPLE_RADARTYPE);
-        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"categories\":[{\"name\":\"Assists\",\"inner\":0,\"outer\":10,\"value\":1}]}";
+        expectedLayout.addColor("color1", "#FFFFFF");
+        expectedLayout.addColor("color2", "#CCCCCC");
+        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"categories\":[{\"name\":\"Assists\",\"inner\":0,\"outer\":10,\"value\":1}],\"colors\":{\"color1\":\"#FFFFFF\",\"color2\":\"#CCCCCC\"}}";
         String json = service.radarToJsonString(expectedLayout);
 
         Assert.assertEquals(expectedJSON, json);
@@ -79,7 +81,11 @@ public class RadarLayoutServiceTest {
         PerGameStatsId statsId = new PerGameStatsId();
         statsId.setPlayer(player);
         statsId.setSeason(year);
-        statsId.setTeam(new Team());
+
+        Team team = new Team();
+        team.setColor1Hex("#FFFFFF");
+        team.setColor2Hex("#FFFFFF");
+        statsId.setTeam(team);
 
         PerGameStats stats = new PerGameStats();
         stats.setAst(value);

@@ -1,7 +1,9 @@
 package com.domin0x.NBARadars.radar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.domin0x.NBARadars.radar.category.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,15 +21,20 @@ public class RadarLayout {
     @JsonProperty("categories")
     private List<Category<Number>> categories;
 
+    @JsonProperty("colors")
+    private Map<String, String> colors;
+
     public RadarLayout(String name, List<Category<Number>> categories, RadarType type) {
         this.title = name;
         this.categories = categories;
         this.type = type;
+        this.colors = new HashMap<>();
     }
 
     public RadarLayout(RadarLayout template) {
         this.title = template.title;
         this.type = template.type;
+        this.colors = new HashMap<>(template.colors);
         //"deep copy" categories list - copy only name, inner, outer. Actual value field will be set for each axis later
         this.categories = new ArrayList<>();
         for (Category<Number> cat : template.categories)
@@ -56,6 +63,10 @@ public class RadarLayout {
 
     public void setType(RadarType type) {
         this.type = type;
+    }
+
+    public void addColor(String name, String hexValue){
+        colors.put(name, hexValue);
     }
 
     @Override

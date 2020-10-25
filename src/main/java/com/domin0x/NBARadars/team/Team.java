@@ -30,6 +30,10 @@ public class Team {
     private String city;
     @Column(name="division")
     private String division;
+    @Column(name="color1_hex")
+    private String color1Hex;
+    @Column(name="color2_hex")
+    private String color2Hex;
 
     public Integer getId() {
         return id;
@@ -86,6 +90,22 @@ public class Team {
 
     public void setDivision(String division) {
         this.division = division;
+    }
+
+    public String getColor1Hex() {
+        return color1Hex;
+    }
+
+    public String getColor2Hex() {
+        return color2Hex;
+    }
+
+    public void setColor1Hex(String color1Hex) {
+        this.color1Hex = color1Hex;
+    }
+
+    public void setColor2Hex(String color2Hex) {
+        this.color2Hex = color2Hex;
     }
 
     @Override
