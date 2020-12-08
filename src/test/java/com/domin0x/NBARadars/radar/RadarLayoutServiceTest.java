@@ -35,6 +35,7 @@ public class RadarLayoutServiceTest {
     public static final BigDecimal VALUE = BigDecimal.ONE;
     public static final Category<Number> SAMPLE_CATEGORY = new Category<>(SAMPLE_STATTYPE.getDisplayName(), MIN, MAX, VALUE);
     public static final String SAMPLE_NAME = "Name";
+    public static final String TEAM_NAME = "LA Lakers";
     public static final int SAMPLE_SEASON = 2015;
     public static final RadarType SAMPLE_RADARTYPE = RadarType.PLAYER_BASE_STATS;
 
@@ -65,10 +66,10 @@ public class RadarLayoutServiceTest {
 
     @Test
     public void whenGivenValidRadarLayoutShouldReturnJsonString() throws JsonProcessingException {
-        RadarLayout expectedLayout =  new RadarLayout(SAMPLE_RADARTYPE.getText(), List.of(SAMPLE_CATEGORY), SAMPLE_RADARTYPE);
+        RadarLayout expectedLayout =  new RadarLayout(SAMPLE_RADARTYPE.getText(), TEAM_NAME, List.of(SAMPLE_CATEGORY), SAMPLE_RADARTYPE);
         expectedLayout.addColor("color1", "#FFFFFF");
         expectedLayout.addColor("color2", "#CCCCCC");
-        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"categories\":[{\"name\":\"Assists\",\"inner\":0,\"outer\":10,\"value\":1}],\"colors\":{\"color1\":\"#FFFFFF\",\"color2\":\"#CCCCCC\"}}";
+        String expectedJSON = "{\"type\":\"PLAYER_BASE_STATS\",\"name\":\"base stats\",\"subTitle\":\"LA Lakers\",\"categories\":[{\"name\":\"Assists\",\"inner\":0,\"outer\":10,\"value\":1}],\"colors\":{\"color1\":\"#FFFFFF\",\"color2\":\"#CCCCCC\"}}";
         String json = service.radarToJsonString(expectedLayout);
 
         Assert.assertEquals(expectedJSON, json);
@@ -108,7 +109,7 @@ public class RadarLayoutServiceTest {
                         .map(statType -> new Category<Number>(statType.getDisplayName(), MIN, MAX))
                         .collect(Collectors.toList());
 
-        return new RadarLayout(SAMPLE_RADARTYPE.getText(), fakeCategories, SAMPLE_RADARTYPE);
+        return new RadarLayout(SAMPLE_RADARTYPE.getText(), TEAM_NAME, fakeCategories, SAMPLE_RADARTYPE);
     }
 
 }

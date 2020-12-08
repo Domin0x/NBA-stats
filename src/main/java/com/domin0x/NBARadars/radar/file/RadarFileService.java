@@ -37,7 +37,7 @@ public class RadarFileService {
     }
 
     public String generateKey(RadarLayout radarLayout){
-        return withoutWhitespaces(radarLayout.getTitle()) + categoriesToKeyString(radarLayout.getCategories()) + SUFFIX;
+        return withoutWhitespaces(radarLayout.getTitle()) + radarLayout.getSubTitle() + categoriesToKeyString(radarLayout.getCategories()) + SUFFIX;
     }
 
     private String withoutWhitespaces(String str) {

@@ -36,7 +36,7 @@ public class RadarPrototypeFactory {
     private Map<RadarType, RadarLayout> initalizeTemplates(){
         Map<RadarType, RadarLayout> radarTemplatesMap = new HashMap<>();
         for (RadarType type : RadarType.values())
-            radarTemplatesMap.put(type, new RadarLayout(type.name(), getCategories(type), type));
+            radarTemplatesMap.put(type, new RadarLayout(type.name(), null, getCategories(type), type));
 
         return radarTemplatesMap;
     }

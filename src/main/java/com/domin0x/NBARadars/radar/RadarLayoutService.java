@@ -32,6 +32,7 @@ public class RadarLayoutService {
     public RadarLayout prepareRadarLayout(RadarType radarType, PerGameStats stats){
         RadarLayout layout = radarPrototypeFactory.getClonedLayoutFromPrototype(radarType);
         layout.setTitle(generateTitle(radarType, stats));
+        layout.setSubTitle(generateSubTitle(stats));
         fillLayoutColors(stats, layout);
         fillLayoutData(layout, stats);
         return layout;
@@ -44,6 +45,10 @@ public class RadarLayoutService {
 
     private String generateTitle(RadarType radarType, PerGameStats stats){
         return stats.getId().getPlayer().getName() + " " + stats.getId().getSeason() + " " + radarType.getText();
+    }
+
+    private String generateSubTitle(PerGameStats stats){
+        return stats.getId().getTeam().getFullName();
     }
 
     private void fillLayoutData(RadarLayout layout, StatLine stats){

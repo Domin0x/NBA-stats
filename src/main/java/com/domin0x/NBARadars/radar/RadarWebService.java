@@ -3,6 +3,8 @@ package com.domin0x.NBARadars.radar;
 import com.domin0x.NBARadars.image.ImageUtils;
 import com.domin0x.NBARadars.player.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -24,9 +26,12 @@ public class RadarWebService {
     @Autowired
     private RadarLayoutService radarLayoutService;
 
+    Logger logger = LoggerFactory.getLogger(RadarWebService.class);
+
     public String getRadarImage (RadarType radarType, Player player, int season ) throws JsonProcessingException{
         RadarLayout layout = radarLayoutService.prepareRadarLayout(radarType, player, season);
-        byte [] radarBinImage = getRadarImageFromAPI(radarLayoutService.radarToJsonString(layout));
+        String jsonData = radarLayoutService.radarToJsonString(layout);
+        byte [] radarBinImage = getRadarImageFromAPI(jsonData);
         return ImageUtils.convertBinImageToString(radarBinImage);
     }
 
@@ -37,6 +42,7 @@ public class RadarWebService {
     }
 
     public byte [] getRadarImageFromAPI (String jsonData) {
+        logger.info(jsonData);
         HttpEntity<String> entity = new HttpEntity<>(jsonData, prepareHttpHeadersForJSONRequest());
         return restTemplate.postForObject(baseURL, entity, byte[].class );
     }

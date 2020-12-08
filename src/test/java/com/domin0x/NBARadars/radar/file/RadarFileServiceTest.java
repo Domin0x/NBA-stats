@@ -24,6 +24,7 @@ public class RadarFileServiceTest {
     private static final String EXISTS_IN_BOTH = "YY";
     private static final String DB_ONLY = "YN";
     private static final String AMAZON_ONLY = "NY";
+    private static final String TEAM = "TorontoRaptors";
 
     @Autowired
     RadarFileService radarFileService;
@@ -105,8 +106,8 @@ public class RadarFileServiceTest {
     public void testCalculateKey(){
         String exampleTitle = "James Jones 2016 base_stats";
         List<Category<Number>> categories = List.of(new Category<Number>("pts", 0, 30.221, 20), new Category<Number>("ast", 0, 10.1, 1));
-        RadarLayout radarLayout = new RadarLayout(exampleTitle, categories, RadarType.PLAYER_BASE_STATS);
-        String expected = "JamesJones2016base_stats" + "pts030.2220ast010.11" + RadarFileService.SUFFIX;
+        RadarLayout radarLayout = new RadarLayout(exampleTitle, TEAM, categories, RadarType.PLAYER_BASE_STATS);
+        String expected = "JamesJones2016base_stats"+ "TorontoRaptors" + "pts030.2220ast010.11" + RadarFileService.SUFFIX;
 
         String result = radarFileService.generateKey(radarLayout);
         Assert.assertEquals(expected , result);

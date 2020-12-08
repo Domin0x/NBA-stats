@@ -15,6 +15,9 @@ public class RadarLayout {
     @JsonProperty("name")
     private String title;
 
+    @JsonProperty("subTitle")
+    private String subTitle;
+
     @JsonIgnoreProperties
     private RadarType type;
 
@@ -24,8 +27,9 @@ public class RadarLayout {
     @JsonProperty("colors")
     private Map<String, String> colors;
 
-    public RadarLayout(String name, List<Category<Number>> categories, RadarType type) {
+    public RadarLayout(String name, String subTitle, List<Category<Number>> categories, RadarType type) {
         this.title = name;
+        this.subTitle = subTitle;
         this.categories = categories;
         this.type = type;
         this.colors = new HashMap<>();
@@ -33,6 +37,7 @@ public class RadarLayout {
 
     public RadarLayout(RadarLayout template) {
         this.title = template.title;
+        this.subTitle = template.subTitle;
         this.type = template.type;
         this.colors = new HashMap<>(template.colors);
         //"deep copy" categories list - copy only name, inner, outer. Actual value field will be set for each axis later
@@ -69,9 +74,17 @@ public class RadarLayout {
         colors.put(name, hexValue);
     }
 
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append(title).append("categories", categories).toString();
+        return new ToStringBuilder(this).append(title).append(subTitle).append("categories", categories).toString();
     }
 
 }
